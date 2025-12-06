@@ -1,0 +1,615 @@
+============================================================
+SEASONALITY SOFTWARE – MIGRATION SUMMARY (FULL NOTES)
+============================================================
+
+------------------------------------------------------------
+1. ORIGINAL PYTHON/HTML PROJECT STRUCTURE (as provided)
+------------------------------------------------------------
+assets/
+basket/
+components/
+elections/
+extras/
+    bhavcopy/
+        .ipynb_checkpoints/
+        clean/
+        new/
+        symbol/
+        unzipped/
+        zipped/
+    security_archives/
+        curl/
+        data_holes/
+        logs/
+        symbols_data/
+        symbols_to_download/
+    update_data/
+        new_data/
+            Symbols/
+                BANKNIFTY/
+                NIFTY/
+                NIFTYIT/
+        new_files/
+        old_data/
+            Symbols/
+                (hundreds of stock/index folders...)
+others/
+    Symbols/
+specialDays/
+Symbols/
+    (hundreds of symbols...)
+tabs/
+    __pycache__/
+watchlist/
+__pycache__/
+
+------------------------------------------------------------
+2. WHAT THE SOFTWARE CURRENTLY DOES (SUMMARY)
+------------------------------------------------------------
+✔ Downloads daily market data (bhavcopy, index data, symbol data)  
+✔ Cleans, formats, updates OHLC data  
+✔ Stores everything locally in folders (no database)  
+✔ Maintains historical data for hundreds of stocks & indices  
+✔ Runs seasonality analytics:
+   - monthly returns
+   - weekday patterns
+   - special day effects
+   - election period behavior
+✔ Contains event-specific data (special days, elections)
+✔ UI built in basic HTML (tabs, simple tables, charts)
+✔ Handles baskets, watchlists, index-level analysis.
+
+------------------------------------------------------------
+3. WHAT UNDERSTANDING IS REQUIRED BEFORE MIGRATION
+------------------------------------------------------------
+To migrate to MERN you must understand:
+
+1. DATA LAYER MIGRATION  
+   - Current system uses local folders + CSVs  
+   - In MERN must shift to MongoDB schemas for OHLC, Symbols, Events  
+
+2. BACKEND MIGRATION (Python → Node.js)  
+   - Python logic using pandas will need to be rewritten  
+   - OR kept as Python microservices  
+
+3. FRONTEND MIGRATION (HTML → React/Next.js)  
+   - Build modern UI components  
+   - Replace static HTML with dynamic pages  
+
+4. FILE WORKFLOWS → API WORKFLOWS  
+   - Many CSV-based processes must become API endpoints  
+
+5. JOB AUTOMATION  
+   - Cron scripts must be implemented for daily data updates.
+
+IN ONE LINE:
+You need to understand MongoDB schemas, Express APIs, React UI, and converting file-based Python logic into Node services (or Python microservices).
+
+------------------------------------------------------------
+4. RECOMMENDED MERN PROJECT STRUCTURE (FOR MIGRATION)
+------------------------------------------------------------
+
+seasonality-platform/
+│
+├── backend/                         # Node.js + Express API
+│   ├── src/
+│   │   ├── config/                  # DB config, environment
+│   │   ├── models/                  # MongoDB schemas
+│   │   ├── controllers/             # API controllers
+│   │   ├── routes/                  # Express route handlers
+│   │   ├── services/                # Business logic (seasonality, events, data)
+│   │   ├── utils/                   # Helpers
+│   │   ├── cron/                    # Daily/weekly update jobs
+│   │   └── app.js                   # Main server file
+│   ├── tests/
+│   ├── package.json
+│   └── README.md
+│
+├── data-services/                   # OPTIONAL: Python microservices
+│   ├── fetch_bhavcopy/              # Data download scripts
+│   ├── compute_seasonality/         # Keep pandas-based analytics
+│   ├── env/
+│   └── main.py
+│
+├── frontend/                        # React or Next.js
+│   ├── public/
+│   ├── src/
+│   │   ├── components/              # Reusable UI components
+│   │   ├── pages/ or views/         # App screens
+│   │   ├── hooks/
+│   │   ├── context/
+│   │   ├── services/                # API calls
+│   │   ├── styles/
+│   │   └── utils/
+│   ├── package.json
+│   └── README.md
+│
+├── docs/                            # API docs, design docs
+├── scripts/                         # Deployment scripts
+├── .env
+├── .gitignore
+└── README.md
+
+------------------------------------------------------------
+END OF FILE
+------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+├───assets
+├───basket
+├───components
+├───elections
+├───extras
+│   ├───bhavcopy
+│   │   ├───.ipynb_checkpoints
+│   │   ├───clean
+│   │   ├───new
+│   │   ├───symbol
+│   │   ├───unzipped
+│   │   └───zipped
+│   ├───security_archives
+│   │   ├───curl
+│   │   ├───data_holes
+│   │   ├───logs
+│   │   ├───symbols_data
+│   │   └───symbols_to_download
+│   └───update_data
+│       ├───new_data
+│       │   └───Symbols
+│       │       ├───BANKNIFTY
+│       │       ├───NIFTY
+│       │       └───NIFTYIT
+│       ├───new_files
+│       └───old_data
+│           └───Symbols
+│               ├───AARTIIND
+│               ├───ABB
+│               ├───ABBOTINDIA
+│               ├───ABCAPITAL
+│               ├───ABFRL
+│               ├───ACC
+│               ├───ADANIENT
+│               ├───ADANIPORTS
+│               ├───ALKEM
+│               ├───AMBUJACEM
+│               ├───APOLLOHOSP
+│               ├───APOLLOTYRE
+│               ├───ASHOKLEY
+│               ├───ASIANPAINT
+│               ├───ASTRAL
+│               ├───ATUL
+│               ├───AUBANK
+│               ├───AUROPHARMA
+│               ├───AXISBANK
+│               ├───BAJAJ-AUTO
+│               ├───BAJAJFINSV
+│               ├───BAJFINANCE
+│               ├───BALKRISIND
+│               ├───BALRAMCHIN
+│               ├───BANDHANBNK
+│               ├───BANKBARODA
+│               ├───BANKNIFTY
+│               ├───BATAINDIA
+│               ├───BEL
+│               ├───BERGEPAINT
+│               ├───BHARATFORG
+│               ├───BHARTIARTL
+│               ├───BHEL
+│               ├───BIOCON
+│               ├───BOSCHLTD
+│               ├───BPCL
+│               ├───BRITANNIA
+│               ├───BSOFT
+│               ├───CANBK
+│               ├───CANFINHOME
+│               ├───CHAMBLFERT
+│               ├───CHOLAFIN
+│               ├───CIPLA
+│               ├───COALINDIA
+│               ├───COFORGE
+│               ├───COLPAL
+│               ├───CONCOR
+│               ├───COROMANDEL
+│               ├───CROMPTON
+│               ├───CUB
+│               ├───CUMMINSIND
+│               ├───DABUR
+│               ├───DALBHARAT
+│               ├───DEEPAKNTR
+│               ├───DELTACORP
+│               ├───DIVISLAB
+│               ├───DIXON
+│               ├───DLF
+│               ├───Dow Jones
+│               ├───DRREDDY
+│               ├───EICHERMOT
+│               ├───ESCORTS
+│               ├───EXIDEIND
+│               ├───FEDERALBNK
+│               ├───FINNIFTY
+│               ├───FSL
+│               ├───GAIL
+│               ├───GLENMARK
+│               ├───GMRINFRA
+│               ├───GNFC
+│               ├───GODREJCP
+│               ├───GODREJPROP
+│               ├───GRANULES
+│               ├───GRASIM
+│               ├───GUJGASLTD
+│               ├───HAL
+│               ├───HAVELLS
+│               ├───HCLTECH
+│               ├───HDFC
+│               ├───HDFCAMC
+│               ├───HDFCBANK
+│               ├───HDFCLIFE
+│               ├───HEROMOTOCO
+│               ├───HINDALCO
+│               ├───HINDCOPPER
+│               ├───HINDPETRO
+│               ├───HINDUNILVR
+│               ├───HONAUT
+│               ├───IBULHSGFIN
+│               ├───ICICIBANK
+│               ├───ICICIGI
+│               ├───ICICIPRULI
+│               ├───IDEA
+│               ├───IDFC
+│               ├───IDFCFIRSTB
+│               ├───IEX
+│               ├───IGL
+│               ├───INDHOTEL
+│               ├───INDIACEM
+│               ├───INDIAMART
+│               ├───INDIGO
+│               ├───INDUSINDBK
+│               ├───INDUSTOWER
+│               ├───INFY
+│               ├───INTELLECT
+│               ├───IOC
+│               ├───IPCALAB
+│               ├───IRCTC
+│               ├───ITC
+│               ├───JINDALSTEL
+│               ├───JKCEMENT
+│               ├───JSWSTEEL
+│               ├───JUBLFOOD
+│               ├───KOTAKBANK
+│               ├───L&TFH
+│               ├───LALPATHLAB
+│               ├───LAURUSLABS
+│               ├───LICHSGFIN
+│               ├───LT
+│               ├───LTIM
+│               ├───LTTS
+│               ├───LUPIN
+│               ├───M&M
+│               ├───M&MFIN
+│               ├───MANAPPURAM
+│               ├───MARICO
+│               ├───MARUTI
+│               ├───MCDOWELL-N
+│               ├───MCX
+│               ├───METROPOLIS
+│               ├───MFSL
+│               ├───MGL
+│               ├───MIDCPNIFTY
+│               ├───MOTHERSON
+│               ├───MPHASIS
+│               ├───MRF
+│               ├───MUTHOOTFIN
+│               ├───Nasdaq
+│               ├───NATIONALUM
+│               ├───NAUKRI
+│               ├───NAVINFLUOR
+│               ├───NESTLEIND
+│               ├───NIFTY
+│               ├───NIFTYAUTO
+│               ├───NIFTYCOMMODITY
+│               ├───NIFTYCPSE
+│               ├───NIFTYENERGY
+│               ├───NIFTYFMCG
+│               ├───NIFTYIT
+│               ├───NIFTYMEDIA
+│               ├───NIFTYMETAL
+│               ├───NIFTYMIDCAP
+│               ├───NIFTYNEXT50
+│               ├───NIFTYOIL&GAS
+│               ├───NIFTYPHARMA
+│               ├───NIFTYPSE
+│               ├───NIFTYPSUBANK
+│               ├───NIFTYPVTBANK
+│               ├───NIFTYREALTY
+│               ├───NIFTYSERVICES
+│               ├───NIFTYSMALLCAP
+│               ├───NMDC
+│               ├───NTPC
+│               ├───OBEROIRLTY
+│               ├───OFSS
+│               ├───ONGC
+│               ├───PAGEIND
+│               ├───PEL
+│               ├───PERSISTENT
+│               ├───PETRONET
+│               ├───PFC
+│               ├───PIDILITIND
+│               ├───PIIND
+│               ├───PNB
+│               ├───POLYCAB
+│               ├───POWERGRID
+│               ├───PVR
+│               ├───RAIN
+│               ├───RAMCOCEM
+│               ├───RBLBANK
+│               ├───RECLTD
+│               ├───RELIANCE
+│               ├───SAIL
+│               ├───SBICARD
+│               ├───SBILIFE
+│               ├───SBIN
+│               ├───SENSEX
+│               ├───SHREECEM
+│               ├───SHRIRAMFIN
+│               ├───SIEMENS
+│               ├───SP500
+│               ├───SRF
+│               ├───SUNPHARMA
+│               ├───SUNTV
+│               ├───SYNGENE
+│               ├───TATACHEM
+│               ├───TATACOMM
+│               ├───TATACONSUM
+│               ├───TATAMOTORS
+│               ├───TATAPOWER
+│               ├───TATASTEEL
+│               ├───TCS
+│               ├───TECHM
+│               ├───TITAN
+│               ├───TORNTPHARM
+│               ├───TORNTPOWER
+│               ├───TRENT
+│               ├───TVSMOTOR
+│               ├───UBL
+│               ├───ULTRACEMCO
+│               ├───UPL
+│               ├───VEDL
+│               ├───VOLTAS
+│               ├───WHIRLPOOL
+│               ├───WIPRO
+│               ├───ZEEL
+│               └───ZYDUSLIFE
+├───others
+│   └───Symbols
+├───specialDays
+├───Symbols
+│   ├───AARTIIND
+│   ├───ABB
+│   ├───ABBOTINDIA
+│   ├───ABCAPITAL
+│   ├───ABFRL
+│   ├───ACC
+│   ├───ADANIENT
+│   ├───ADANIPORTS
+│   ├───ALKEM
+│   ├───AMBUJACEM
+│   ├───APOLLOHOSP
+│   ├───APOLLOTYRE
+│   ├───ASHOKLEY
+│   ├───ASIANPAINT
+│   ├───ASTRAL
+│   ├───ATUL
+│   ├───AUBANK
+│   ├───AUROPHARMA
+│   ├───AXISBANK
+│   ├───BAJAJ-AUTO
+│   ├───BAJAJFINSV
+│   ├───BAJFINANCE
+│   ├───BALKRISIND
+│   ├───BALRAMCHIN
+│   ├───BANDHANBNK
+│   ├───BANKBARODA
+│   ├───BANKNIFTY
+│   ├───BATAINDIA
+│   ├───BEL
+│   ├───BERGEPAINT
+│   ├───BHARATFORG
+│   ├───BHARTIARTL
+│   ├───BHEL
+│   ├───BIOCON
+│   ├───BOSCHLTD
+│   ├───BPCL
+│   ├───BRITANNIA
+│   ├───BSOFT
+│   ├───CANBK
+│   ├───CANFINHOME
+│   ├───CHAMBLFERT
+│   ├───CHOLAFIN
+│   ├───CIPLA
+│   ├───COALINDIA
+│   ├───COFORGE
+│   ├───COLPAL
+│   ├───CONCOR
+│   ├───COROMANDEL
+│   ├───CROMPTON
+│   ├───CUB
+│   ├───CUMMINSIND
+│   ├───DABUR
+│   ├───DALBHARAT
+│   ├───DEEPAKNTR
+│   ├───DELTACORP
+│   ├───DIVISLAB
+│   ├───DIXON
+│   ├───DLF
+│   ├───Dow Jones
+│   ├───DRREDDY
+│   ├───EICHERMOT
+│   ├───ESCORTS
+│   ├───EXIDEIND
+│   ├───FEDERALBNK
+│   ├───FINNIFTY
+│   ├───FSL
+│   ├───GAIL
+│   ├───GLENMARK
+│   ├───GMRINFRA
+│   ├───GNFC
+│   ├───GODREJCP
+│   ├───GODREJPROP
+│   ├───GRANULES
+│   ├───GRASIM
+│   ├───GUJGASLTD
+│   ├───HAL
+│   ├───HAVELLS
+│   ├───HCLTECH
+│   ├───HDFC
+│   ├───HDFCAMC
+│   ├───HDFCBANK
+│   ├───HDFCLIFE
+│   ├───HEROMOTOCO
+│   ├───HINDALCO
+│   ├───HINDCOPPER
+│   ├───HINDPETRO
+│   ├───HINDUNILVR
+│   ├───HONAUT
+│   ├───IBULHSGFIN
+│   ├───ICICIBANK
+│   ├───ICICIGI
+│   ├───ICICIPRULI
+│   ├───IDEA
+│   ├───IDFC
+│   ├───IDFCFIRSTB
+│   ├───IEX
+│   ├───IGL
+│   ├───INDHOTEL
+│   ├───INDIACEM
+│   ├───INDIAMART
+│   ├───INDIGO
+│   ├───INDUSINDBK
+│   ├───INDUSTOWER
+│   ├───INFY
+│   ├───INTELLECT
+│   ├───IOC
+│   ├───IPCALAB
+│   ├───IRCTC
+│   ├───ITC
+│   ├───JINDALSTEL
+│   ├───JKCEMENT
+│   ├───JSWSTEEL
+│   ├───JUBLFOOD
+│   ├───KOTAKBANK
+│   ├───L&TFH
+│   ├───LALPATHLAB
+│   ├───LAURUSLABS
+│   ├───LICHSGFIN
+│   ├───LT
+│   ├───LTIM
+│   ├───LTTS
+│   ├───LUPIN
+│   ├───M&M
+│   ├───M&MFIN
+│   ├───MANAPPURAM
+│   ├───MARICO
+│   ├───MARUTI
+│   ├───MCDOWELL-N
+│   ├───MCX
+│   ├───METROPOLIS
+│   ├───MFSL
+│   ├───MGL
+│   ├───MIDCPNIFTY
+│   ├───MOTHERSON
+│   ├───MPHASIS
+│   ├───MRF
+│   ├───MUTHOOTFIN
+│   ├───Nasdaq
+│   ├───NATIONALUM
+│   ├───NAUKRI
+│   ├───NAVINFLUOR
+│   ├───NESTLEIND
+│   ├───NIFTY
+│   ├───NIFTYAUTO
+│   ├───NIFTYCOMMODITY
+│   ├───NIFTYCPSE
+│   ├───NIFTYENERGY
+│   ├───NIFTYFMCG
+│   ├───NIFTYIT
+│   ├───NIFTYMEDIA
+│   ├───NIFTYMETAL
+│   ├───NIFTYMIDCAP
+│   ├───NIFTYNEXT50
+│   ├───NIFTYOIL&GAS
+│   ├───NIFTYPHARMA
+│   ├───NIFTYPSE
+│   ├───NIFTYPSUBANK
+│   ├───NIFTYPVTBANK
+│   ├───NIFTYREALTY
+│   ├───NIFTYSERVICES
+│   ├───NIFTYSMALLCAP
+│   ├───NMDC
+│   ├───NTPC
+│   ├───OBEROIRLTY
+│   ├───OFSS
+│   ├───ONGC
+│   ├───PAGEIND
+│   ├───PEL
+│   ├───PERSISTENT
+│   ├───PETRONET
+│   ├───PFC
+│   ├───PIDILITIND
+│   ├───PIIND
+│   ├───PNB
+│   ├───POLYCAB
+│   ├───POWERGRID
+│   ├───PVR
+│   ├───RAIN
+│   ├───RAMCOCEM
+│   ├───RBLBANK
+│   ├───RECLTD
+│   ├───RELIANCE
+│   ├───SAIL
+│   ├───SBICARD
+│   ├───SBILIFE
+│   ├───SBIN
+│   ├───SENSEX
+│   ├───SHREECEM
+│   ├───SHRIRAMFIN
+│   ├───SIEMENS
+│   ├───SP500
+│   ├───SRF
+│   ├───SUNPHARMA
+│   ├───SUNTV
+│   ├───SYNGENE
+│   ├───TATACHEM
+│   ├───TATACOMM
+│   ├───TATACONSUM
+│   ├───TATAMOTORS
+│   ├───TATAPOWER
+│   ├───TATASTEEL
+│   ├───TCS
+│   ├───TECHM
+│   ├───TITAN
+│   ├───TORNTPHARM
+│   ├───TORNTPOWER
+│   ├───TRENT
+│   ├───TVSMOTOR
+│   ├───UBL
+│   ├───ULTRACEMCO
+│   ├───UPL
+│   ├───VEDL
+│   ├───VOLTAS
+│   ├───WHIRLPOOL
+│   ├───WIPRO
+│   ├───ZEEL
+│   └───ZYDUSLIFE
+├───tabs
+│   └───__pycache__
+├───watchlist
+└───__pycache__
