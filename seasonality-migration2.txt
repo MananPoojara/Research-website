@@ -1,0 +1,3293 @@
+============================================================
+SEASONALITY SOFTWARE – MIGRATION SUMMARY (FULL NOTES)
+============================================================
+
+------------------------------------------------------------
+1. ORIGINAL PYTHON/HTML PROJECT STRUCTURE (as provided)
+------------------------------------------------------------
+
+
+C:\Users\Seasonality 26-08-2025>tree /F
+
+│   helper.py
+│   index.py
+│   index.spec
+│
+├───assets
+│       checklist.css
+│       radio.css
+│       slider.css
+│
+├───basket
+│       basket.csv
+│
+├───components
+│       BestMonthlyReturn.py
+│       daily_temp_24-06-2024.py
+│       electionTab.py
+│       expiryReturnPercentage.py
+│       monthly_temp.py
+│       seasonality_temp.py
+│       streak.py
+│       test.py
+│       weeklyTab.py
+│
+├───elections
+│       ElectionDates.csv
+│       INDIA.csv
+│       USA.csv
+│
+├───extras
+│   │   check.py
+│   │   daily_temp.py
+│   │   daily_temp.spec
+│   │   format_election_file.py
+│   │   Midcap all quotes.csv
+│   │   streak.py
+│   │   streak_temp.py
+│   │
+│   ├───bhavcopy
+│   │   │   Clean.ipynb
+│   │   │   columns.csv
+│   │   │   Download Files.ipynb
+│   │   │   Fetch Current Futures only.ipynb
+│   │   │   Fetch Symbols Data.ipynb
+│   │   │   Unzip Files.ipynb
+│   │   │
+│   │   ├───.ipynb_checkpoints
+│   │   │       Clean-checkpoint.ipynb
+│   │   │       Download Files-checkpoint.ipynb
+│   │   │       Fetch Current Futures only-checkpoint.ipynb
+│   │   │
+│   │   ├───clean
+│   │   │       2024-06-27.csv
+│   │   │       2024-06-28.csv
+│   │   │       2024-07-01.csv
+│   │   │       2024-07-02.csv
+│   │   │       2024-07-03.csv
+│   │   │       2024-07-04.csv
+│   │   │       2024-07-05.csv
+│   │   │       2024-07-08.csv
+│   │   │       2024-07-09.csv
+│   │   │       2024-07-10.csv
+│   │   │       2024-07-11.csv
+│   │   │       2024-07-12.csv
+│   │   │       2024-07-15.csv
+│   │   │       2024-07-16.csv
+│   │   │       2024-07-18.csv
+│   │   │       2024-07-19.csv
+│   │   │       2024-07-22.csv
+│   │   │       2024-07-23.csv
+│   │   │       2024-07-24.csv
+│   │   │
+│   │   ├───new
+│   │   │       2024-06-27.csv
+│   │   │       2024-06-28.csv
+│   │   │       2024-07-01.csv
+│   │   │       2024-07-02.csv
+│   │   │       2024-07-03.csv
+│   │   │       2024-07-04.csv
+│   │   │       2024-07-05.csv
+│   │   │       2024-07-08.csv
+│   │   │       2024-07-09.csv
+│   │   │       2024-07-10.csv
+│   │   │       2024-07-11.csv
+│   │   │       2024-07-12.csv
+│   │   │       2024-07-15.csv
+│   │   │       2024-07-16.csv
+│   │   │       2024-07-18.csv
+│   │   │       2024-07-19.csv
+│   │   │       2024-07-22.csv
+│   │   │       2024-07-23.csv
+│   │   │       2024-07-24.csv
+│   │   │
+│   │   ├───symbol
+│   │   ├───unzipped
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240708_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240709_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240710_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240711_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240712_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240715_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240716_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240718_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240719_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240722_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240723_F_0000.csv
+│   │   │       BhavCopy_NSE_FO_0_0_0_20240724_F_0000.csv
+│   │   │       fo01JUL2024bhav.csv
+│   │   │       fo02JUL2024bhav.csv
+│   │   │       fo03JUL2024bhav.csv
+│   │   │       fo04JUL2024bhav.csv
+│   │   │       fo05JUL2024bhav.csv
+│   │   │       fo27JUN2024bhav.csv
+│   │   │       fo28JUN2024bhav.csv
+│   │   │
+│   │   └───zipped
+│   │           BhavCopy_NSE_FO_0_0_0_20240708_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240709_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240710_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240711_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240712_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240715_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240716_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240718_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240719_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240722_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240723_F_0000.csv.zip
+│   │           BhavCopy_NSE_FO_0_0_0_20240724_F_0000.csv.zip
+│   │           fo01JUL2024bhav.csv.zip
+│   │           fo02JUL2024bhav.csv.zip
+│   │           fo03JUL2024bhav.csv.zip
+│   │           fo04JUL2024bhav.csv.zip
+│   │           fo05JUL2024bhav.csv.zip
+│   │           fo27JUN2024bhav.csv.zip
+│   │           fo28JUN2024bhav.csv.zip
+│   │
+│   ├───security_archives
+│   │   │   fetch_NSE_Data_Security_archives.ipynb
+│   │   │
+│   │   ├───curl
+│   │   │       NSE_curl_bash.txt
+│   │   │
+│   │   ├───data_holes
+│   │   ├───logs
+│   │   ├───symbols_data
+│   │   └───symbols_to_download
+│   │           symbols.csv
+│   │
+│   └───update_data
+│       │   logFile.csv
+│       │   Symbols.zip
+│       │   update_data.py
+│       │
+│       ├───new_data
+│       │   └───Symbols
+│       │       ├───BANKNIFTY
+│       │       │       1_Daily.csv
+│       │       │       2_MondayWeekly.csv
+│       │       │       3_ExpiryWeekly.csv
+│       │       │       4_Monthly.csv
+│       │       │       5_Yearly.csv
+│       │       │
+│       │       ├───NIFTY
+│       │       │       1_Daily.csv
+│       │       │       2_MondayWeekly.csv
+│       │       │       3_ExpiryWeekly.csv
+│       │       │       4_Monthly.csv
+│       │       │       5_Yearly.csv
+│       │       │
+│       │       └───NIFTYIT
+│       │               1_Daily.csv
+│       │               2_MondayWeekly.csv
+│       │               3_ExpiryWeekly.csv
+│       │               4_Monthly.csv
+│       │               5_Yearly.csv
+│       │
+│       ├───new_files
+│       │       seasonality.csv
+│       │
+│       └───old_data
+│           └───Symbols
+│               ├───AARTIIND
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ABB
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ABBOTINDIA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ABCAPITAL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ABFRL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ACC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ADANIENT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ADANIPORTS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ALKEM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───AMBUJACEM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───APOLLOHOSP
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───APOLLOTYRE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ASHOKLEY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ASIANPAINT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ASTRAL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ATUL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───AUBANK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───AUROPHARMA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───AXISBANK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BAJAJ-AUTO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BAJAJFINSV
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BAJFINANCE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BALKRISIND
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BALRAMCHIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BANDHANBNK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BANKBARODA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BANKNIFTY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BATAINDIA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BERGEPAINT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BHARATFORG
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BHARTIARTL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BHEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BIOCON
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BOSCHLTD
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BPCL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BRITANNIA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───BSOFT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CANBK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CANFINHOME
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CHAMBLFERT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CHOLAFIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CIPLA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───COALINDIA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───COFORGE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───COLPAL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CONCOR
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───COROMANDEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CROMPTON
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CUB
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───CUMMINSIND
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───DABUR
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───DALBHARAT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───DEEPAKNTR
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───DELTACORP
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───DIVISLAB
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───DIXON
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───DLF
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───Dow Jones
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───DRREDDY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───EICHERMOT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ESCORTS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───EXIDEIND
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───FEDERALBNK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───FINNIFTY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───FSL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GAIL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GLENMARK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GMRINFRA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GNFC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GODREJCP
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GODREJPROP
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GRANULES
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GRASIM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───GUJGASLTD
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HAL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HAVELLS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HCLTECH
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HDFC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HDFCAMC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HDFCBANK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HDFCLIFE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HEROMOTOCO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HINDALCO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HINDCOPPER
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HINDPETRO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HINDUNILVR
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───HONAUT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IBULHSGFIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ICICIBANK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ICICIGI
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ICICIPRULI
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IDEA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IDFC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IDFCFIRSTB
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IEX
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IGL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───INDHOTEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───INDIACEM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───INDIAMART
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───INDIGO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───INDUSINDBK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───INDUSTOWER
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───INFY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───INTELLECT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IOC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IPCALAB
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───IRCTC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ITC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───JINDALSTEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───JKCEMENT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───JSWSTEEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───JUBLFOOD
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───KOTAKBANK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───L&TFH
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───LALPATHLAB
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───LAURUSLABS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───LICHSGFIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───LT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───LTIM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───LTTS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───LUPIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───M&M
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───M&MFIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MANAPPURAM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MARICO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MARUTI
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MCDOWELL-N
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MCX
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───METROPOLIS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MFSL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MGL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MIDCPNIFTY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MOTHERSON
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MPHASIS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MRF
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───MUTHOOTFIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───Nasdaq
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NATIONALUM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NAUKRI
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NAVINFLUOR
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NESTLEIND
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYAUTO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYCOMMODITY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYCPSE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYENERGY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYFMCG
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYIT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYMEDIA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYMETAL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYMIDCAP
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYNEXT50
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYOIL&GAS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYPHARMA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYPSE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYPSUBANK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYPVTBANK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYREALTY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYSERVICES
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NIFTYSMALLCAP
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NMDC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───NTPC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───OBEROIRLTY
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───OFSS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ONGC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PAGEIND
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PERSISTENT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PETRONET
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PFC
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PIDILITIND
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PIIND
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PNB
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───POLYCAB
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───POWERGRID
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───PVR
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───RAIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───RAMCOCEM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───RBLBANK
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───RECLTD
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───RELIANCE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SAIL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SBICARD
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SBILIFE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SBIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SENSEX
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SHREECEM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SHRIRAMFIN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SIEMENS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SP500
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SRF
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SUNPHARMA
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SUNTV
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───SYNGENE
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TATACHEM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TATACOMM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TATACONSUM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TATAMOTORS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TATAPOWER
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TATASTEEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TCS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TECHM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TITAN
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TORNTPHARM
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TORNTPOWER
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TRENT
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───TVSMOTOR
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───UBL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ULTRACEMCO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───UPL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───VEDL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───VOLTAS
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───WHIRLPOOL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───WIPRO
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               ├───ZEEL
+│               │       1_Daily.csv
+│               │       2_MondayWeekly.csv
+│               │       3_ExpiryWeekly.csv
+│               │       4_Monthly.csv
+│               │       5_Yearly.csv
+│               │
+│               └───ZYDUSLIFE
+│                       1_Daily.csv
+│                       2_MondayWeekly.csv
+│                       3_ExpiryWeekly.csv
+│                       4_Monthly.csv
+│                       5_Yearly.csv
+│
+├───others
+│   │   GenerateFiles.py
+│   │   GenerateMultipleFiles.py
+│   │   Seasonality.csv
+│   │
+│   └───Symbols
+├───specialDays
+│       specialDays.csv
+│
+├───Symbols
+│   ├───AARTIIND
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ABB
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ABBOTINDIA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ABCAPITAL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ABFRL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ACC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ADANIENT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ADANIPORTS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ALKEM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───AMBUJACEM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───APOLLOHOSP
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───APOLLOTYRE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ASHOKLEY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ASIANPAINT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ASTRAL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ATUL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───AUBANK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───AUROPHARMA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───AXISBANK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BAJAJ-AUTO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BAJAJFINSV
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BAJFINANCE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BALKRISIND
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BALRAMCHIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BANDHANBNK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BANKBARODA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BANKNIFTY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BATAINDIA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BERGEPAINT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BHARATFORG
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BHARTIARTL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BHEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BIOCON
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BOSCHLTD
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BPCL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BRITANNIA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───BSOFT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CANBK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CANFINHOME
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CHAMBLFERT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CHOLAFIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CIPLA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───COALINDIA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───COFORGE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───COLPAL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CONCOR
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───COROMANDEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CROMPTON
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CUB
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───CUMMINSIND
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───DABUR
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───DALBHARAT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───DEEPAKNTR
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───DELTACORP
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───DIVISLAB
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───DIXON
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───DLF
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───Dow Jones
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───DRREDDY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───EICHERMOT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ESCORTS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───EXIDEIND
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───FEDERALBNK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───FINNIFTY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───FSL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GAIL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GLENMARK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GMRINFRA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GNFC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GODREJCP
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GODREJPROP
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GRANULES
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GRASIM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───GUJGASLTD
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HAL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HAVELLS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HCLTECH
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HDFC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HDFCAMC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HDFCBANK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HDFCLIFE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HEROMOTOCO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HINDALCO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HINDCOPPER
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HINDPETRO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HINDUNILVR
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───HONAUT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IBULHSGFIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ICICIBANK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ICICIGI
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ICICIPRULI
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IDEA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IDFC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IDFCFIRSTB
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IEX
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IGL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───INDHOTEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───INDIACEM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───INDIAMART
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───INDIGO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───INDUSINDBK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───INDUSTOWER
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───INFY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───INTELLECT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IOC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IPCALAB
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───IRCTC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ITC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───JINDALSTEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───JKCEMENT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───JSWSTEEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───JUBLFOOD
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───KOTAKBANK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───L&TFH
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───LALPATHLAB
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───LAURUSLABS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───LICHSGFIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───LT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───LTIM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───LTTS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───LUPIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───M&M
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───M&MFIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MANAPPURAM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MARICO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MARUTI
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MCDOWELL-N
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MCX
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───METROPOLIS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MFSL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MGL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MIDCPNIFTY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MOTHERSON
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MPHASIS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MRF
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───MUTHOOTFIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───Nasdaq
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NATIONALUM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NAUKRI
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NAVINFLUOR
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NESTLEIND
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYAUTO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYCOMMODITY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYCPSE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYENERGY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYFMCG
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYIT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYMEDIA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYMETAL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYMIDCAP
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYNEXT50
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYOIL&GAS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYPHARMA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYPSE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYPSUBANK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYPVTBANK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYREALTY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYSERVICES
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NIFTYSMALLCAP
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NMDC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───NTPC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───OBEROIRLTY
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───OFSS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ONGC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PAGEIND
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PERSISTENT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PETRONET
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PFC
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PIDILITIND
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PIIND
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PNB
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───POLYCAB
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───POWERGRID
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───PVR
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───RAIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───RAMCOCEM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───RBLBANK
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───RECLTD
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───RELIANCE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SAIL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SBICARD
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SBILIFE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SBIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SENSEX
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SHREECEM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SHRIRAMFIN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SIEMENS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SP500
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SRF
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SUNPHARMA
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SUNTV
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───SYNGENE
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TATACHEM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TATACOMM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TATACONSUM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TATAMOTORS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TATAPOWER
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TATASTEEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TCS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TECHM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TITAN
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TORNTPHARM
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TORNTPOWER
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TRENT
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───TVSMOTOR
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───UBL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ULTRACEMCO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───UPL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───VEDL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───VOLTAS
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───WHIRLPOOL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───WIPRO
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   ├───ZEEL
+│   │       1_Daily.csv
+│   │       2_MondayWeekly.csv
+│   │       3_ExpiryWeekly.csv
+│   │       4_Monthly.csv
+│   │       5_Yearly.csv
+│   │
+│   └───ZYDUSLIFE
+│           1_Daily.csv
+│           2_MondayWeekly.csv
+│           3_ExpiryWeekly.csv
+│           4_Monthly.csv
+│           5_Yearly.csv
+│
+├───tabs
+│   │   animatedCharts.py
+│   │   dailyTimeFrame.py
+│   │   dailyTimeFrame_basket.py
+│   │   dailyTimeFrame_elections.py
+│   │   dailyTimeFrame_phenomena.py
+│   │   dailyTimeFrame_scenario.py
+│   │   monthlyTimeFrame.py
+│   │   phenomenaBackTester.py
+│   │   symbolScanner.py
+│   │   weeklyTimeFrame.py
+│   │   yearlyTimeFrame.py
+│   │
+│   └───__pycache__
+│           animatedCharts.cpython-311.pyc
+│           animatedCharts.cpython-312.pyc
+│           dailyTimeFrame.cpython-311.pyc
+│           dailyTimeFrame.cpython-312.pyc
+│           dailyTimeFrame_basket.cpython-311.pyc
+│           dailyTimeFrame_basket.cpython-312.pyc
+│           dailyTimeFrame_elections.cpython-311.pyc
+│           dailyTimeFrame_elections.cpython-312.pyc
+│           dailyTimeFrame_phenomena.cpython-311.pyc
+│           dailyTimeFrame_phenomena.cpython-312.pyc
+│           dailyTimeFrame_scenario.cpython-311.pyc
+│           dailyTimeFrame_scenario.cpython-312.pyc
+│           monthlyTimeFrame.cpython-311.pyc
+│           monthlyTimeFrame.cpython-312.pyc
+│           phenomenaBackTester.cpython-311.pyc
+│           phenomenaBackTester.cpython-312.pyc
+│           symbolScanner.cpython-311.pyc
+│           symbolScanner.cpython-312.pyc
+│           weeklyTimeFrame.cpython-311.pyc
+│           weeklyTimeFrame.cpython-312.pyc
+│           yearlyTimeFrame.cpython-311.pyc
+│           yearlyTimeFrame.cpython-312.pyc
+│
+├───watchlist
+│       watchlist.csv
+│
+└───__pycache__
+        helper.cpython-311.pyc
+        helper.cpython-312.pyc
+
+
+------------------------------------------------------------
+2. WHAT THE SOFTWARE CURRENTLY DOES (SUMMARY)
+------------------------------------------------------------
+Make summery for current software
+
+
+We need full summery file structure To migrate to MERN/Next 
+for faster and scalable
+what we need to understand and how we can do this
