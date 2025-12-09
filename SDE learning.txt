@@ -1,0 +1,59 @@
+what to learn 
+
+Server 
+- creating
+(on premise and cloud) 
+- hosting
+- networking
+- scaling 
+- connection
+- api gateway
+
+storage 
+- postgres sql (joins, sub queries, CTE, window function, Rank, DenseRank)
+- s3 (boto client)
+- table replication
+- Timescale DB
+- DuckDB
+
+System Architecture
+- system design
+- schema db design
+- user flow, data flow
+- The Basics
+----- >
+What happens when you type a URL in the browser
+What is DNS, Load Balancer, CDN
+TCP vs UDP, HTTP vs HTTPS
+Even these basics were eye-opening. Like
+Did you know DNS is like a phonebook of the internet? And CDNs are why YouTube loads fast?
+
+Data and Storage
+SQL vs NoSQL
+Indexing, Replication, Sharding
+When to choose MongoDB vs PostgreSQL
+I learned this the hard way. In one project, we chose Mongo for transactional data. Later, we regretted it.
+
+Scaling Techniques
+Horizontal vs Vertical scaling
+Caching (Redis, Memcached)
+Load balancing (Round-robin, IP Hashing)
+I loved this part. It made me feel like I could finally design something for millions of users even if it was just on paper.
+
+Architecture Patterns
+Monolith vs Microservices
+Event-Driven Architecture
+Pub/Sub, Message Queues (Kafka, RabbitMQ)
+-------------------------->
+
+Backend
+- Nodejs
+- Api (REST -> graphQL)
+
+Security
+- firewall Ruling
+- access control
+
+
+New Tech Stack
+- CDN -> cloudflare
