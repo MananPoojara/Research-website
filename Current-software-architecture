@@ -1,0 +1,189 @@
+
+Task Completed
+12:18 PM
+Based on my analysis of your current seasonality software, here's the comprehensive system architecture:
+
+🏗️ Current Seasonality Software System Architecture
+Data Flow & Storage Architecture
+1. Data Sources & Ingestion
+Raw Data Sources:
+├── Seasonality.csv (Primary OHLCV data for all symbols)
+├── SpecialDays/SpecialDays.csv (Holiday/special day definitions)
+├── elections/ElectionDates.csv (Election year data)
+├── basket/basket.csv (Basket compositions)
+└── Watchlist/Watchlist.csv (User watchlists)
+2. Data Processing Pipeline
+Seasonality.csv → GenerateMultipleFiles.py → Symbol-specific CSVs
+
+Processing Steps:
+1. Read raw Seasonality.csv
+2. Group by ticker symbol
+3. For each symbol:
+   ├── Convert daily → weekly (Monday & Expiry weeks)
+   ├── Convert daily → monthly
+   ├── Convert daily → yearly
+   ├── Calculate 50+ derived fields per timeframe
+   └── Save 5 CSV files per symbol
+3. Storage Structure
+Symbols/
+├── BANKNIFTY/
+│   ├── 1_Daily.csv (Daily OHLCV + 50 derived fields)
+│   ├── 2_MondayWeekly.csv (Monday-to-Monday weeks)
+│   ├── 3_ExpiryWeekly.csv (Thursday-to-Thursday expiry weeks)
+│   ├── 4_Monthly.csv (Monthly aggregations)
+│   └── 5_Yearly.csv (Yearly aggregations)
+├── RELIANCE/
+│   └── [Same structure for each symbol]
+└── [50+ other symbols...]
+Application Architecture
+4. Main Application (index.py)
+Dash App Structure:
+├── Tab Navigation (10 tabs)
+├── Content Area (Dynamic tab content)
+├── Global State Management
+└── Callback System (Complex filtering logic)
+5. Tab Architecture
+10 Analysis Tabs:
+├── Daily Timeframe (Most complex - 15+ chart types)
+├── Weekly Timeframe (Monday & Expiry weeks)
+├── Monthly Timeframe (Calendar & Expiry months)
+├── Yearly Timeframe (Annual analysis)
+├── Scenario Analysis (Custom trading scenarios)
+├── Elections (Election year analysis)
+├── Symbol Scanner (Multi-symbol comparison)
+├── Phenomena Backtester (Seasonal pattern testing)
+├── Basket Analysis (Portfolio analysis)
+└── Animated Charts (Time-series animations)
+Data Model Architecture
+6. Core Data Fields (Per Timeframe)
+Base OHLCV:
+├── Date, Open, High, Low, Close, Volume, OpenInterest
+
+Temporal Fields:
+├── Weekday, MonthNumber, Year
+├── CalenderMonthDay, CalenderYearDay
+├── TradingMonthDay, TradingYearDay
+├── MondayWeeklyDate, ExpiryWeeklyDate
+
+Week Calculations:
+├── WeekNumberMonthly, WeekNumberYearly
+├── EvenWeekNumberMonthly, EvenWeekNumberYearly
+
+Return Calculations:
+├── ReturnPoints, ReturnPercentage
+├── PositiveDay/Week/Month/Year flags
+
+Higher Timeframe Returns:
+├── MondayWeeklyReturnPoints/Percentage
+├── ExpiryWeeklyReturnPoints/Percentage
+├── MonthlyReturnPoints/Percentage
+├── YearlyReturnPoints/Percentage
+
+Parity Flags:
+├── EvenMonth, EvenYear
+├── EvenCalenderMonthDay, EvenCalenderYearDay
+├── EvenTradingMonthDay, EvenTradingYearDay
+Filtering & Analysis Engine
+7. Filter Hierarchy
+Year Filters:
+├── Positive/Negative Years
+├── Even/Odd Years
+├── Leap Years
+├── Election Years (1952,1957,1962,1971,etc.)
+├── Decade Years (1-10)
+└── Specific Years
+
+Month Filters:
+├── Positive/Negative Months
+├── Even/Odd Months
+├── Specific Month (1-12)
+└── Month Number
+
+Week Filters:
+├── Positive/Negative Weeks
+├── Even/Odd Weeks (Monthly/Yearly count)
+├── Specific Week Number (1-5)
+└── Week Type (Monday/Expiry)
+
+Day Filters:
+├── Positive/Negative Days
+├── Weekdays (Mon-Fri)
+├── Even/Odd Calendar Days (Monthly/Yearly)
+└── Even/Odd Trading Days (Monthly/Yearly)
+
+Outlier Filters:
+├── Daily % Change Range
+├── Weekly % Change Range
+├── Monthly % Change Range
+└── Yearly % Change Range
+8. Analysis Types
+Chart Types:
+├── Filtered Charts (Candlestick with filters)
+├── Yearly Overlay Charts (Multi-year comparison)
+├── Aggregate Charts (Sum/Avg/Max/Min by field)
+├── Superimposed Charts (Multi-symbol overlay)
+└── Special Day Charts (Pre/post event analysis)
+
+Statistical Analysis:
+├── Data Tables (Statistics by time period)
+├── Bar Charts (Performance visualization)
+├── Correlation Analysis
+└── Performance Metrics (Win rate, avg return, etc.)
+Component Architecture
+9. Helper Functions (helper.py)
+Data Loading:
+├── symbolNamesToDropdown (Available symbols)
+├── filterDataFrameFromHelper (Complex filtering)
+├── getDataTableForPlot (Statistics formatting)
+
+Analysis Functions:
+├── getDataTableStatistics (Win rate, avg return, etc.)
+├── getNConsecutiveSequanceIndexFromList (Pattern detection)
+├── getTrendingDays (Trend analysis)
+├── generatePerformanceTable (Backtesting)
+
+Special Calculations:
+├── getElectionfilterDataFrame (Election year filtering)
+├── getWeeklyScenarioDataFrame (Custom scenarios)
+├── getRecentDayReturnPercentage (Recent performance)
+└── maximumConsecutiveValues (Streak analysis)
+10. Callback System
+Dash Callbacks:
+├── Tab switching logic
+├── Filter application (15+ input parameters)
+├── Chart generation (Multiple chart types)
+├── Data table updates
+└── Download functionality
+External Dependencies
+11. Configuration Files
+SpecialDays/SpecialDays.csv:
+├── Contains dates for holidays, festivals, events
+└── Used for special day analysis
+
+elections/ElectionDates.csv:
+├── Election years mapping
+└── Year type classifications (Election, Pre, Post, Mid)
+
+basket/basket.csv:
+├── Basket compositions
+└── Multi-symbol analysis
+
+Watchlist/Watchlist.csv:
+├── User-defined symbol lists
+└── Quick access symbols
+Performance Characteristics
+12. System Performance
+Data Volume: 50+ symbols × 5 files × 10+ years × 200+ days/year
+Processing: Batch processing via GenerateMultipleFiles.py
+Memory: In-memory DataFrames for analysis
+Caching: Session-based persistence in Dash
+Concurrency: Single-user desktop application
+Data Flow Sequence
+13. User Interaction Flow
+1. User selects symbol → Load symbol CSVs
+2. User applies filters → Filter DataFrames in memory
+3. Generate charts → Plotly chart objects
+4. Generate tables → Pandas statistics
+5. User downloads → CSV export
+6. Repeat for different symbols/timeframes
+This architecture shows a sophisticated desktop application that proc
