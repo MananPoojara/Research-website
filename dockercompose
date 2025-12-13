@@ -106,3 +106,88 @@ nginx conf
 
 #-----------------------------------------------------------------------------------------------------#
 https://go.microsoft.com/fwlink/?LinkID=760868
+
+
+
+wget https://dl.min.io/client/mc/release/linux-amd64/mc
+chmod +x mc
+sudo mv mc /usr/local/bin/
+
+
+
+mc alias set minio http://localhost:9000 your_strong_access_key_here your_very_strong_secret_here
+
+
+
+
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:*"],
+      "Resource": ["arn:aws:s3:::timescaledb-backups", "arn:aws:s3:::timescaledb-backups/*"]
+    }
+  ]
+}
+
+
+
+
+mc alias set minio http://localhost:9000 timescale-backup YOUR_BACKUP_SECRET
+
+
+
+mc version enable minio/timescaledb-backups
+
+
+
+mc ilm rule add minio/timescaledb-backups --expire-days 90 --noncurrent-expire-days 30
+
+
+
+
+nano ~/backup-timescaledb-to-minio.sh
+
+
+#!/bin/bash
+
+export PGPASSWORD="your_pg_password"  # Or use ~/.pgpass
+DB_NAME="your_database_name"
+DB_USER="postgres"
+DB_HOST="localhost"
+
+MC_ALIAS="minio"
+BUCKET="timescaledb-backups"
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+BACKUP_FILE="${DB_NAME}_${TIMESTAMP}.dump"
+
+echo "Backup starting: $(date)"
+
+pg_dump -Fc -h $DB_HOST -U $DB_USER $DB_NAME | \
+  mc pipe $MC_ALIAS/$BUCKET/$BACKUP_FILE
+
+if [ $? -eq 0 ]; then
+  echo "Success: $BACKUP_FILE uploaded"
+else
+  echo "Failed!"
+  exit 1
+fi
+
+
+
+chmod +x ~/backup-timescaledb-to-minio.sh
+./backup-timescaledb-to-minio.sh
+
+
+crontab -e
+
+
+30 2 * * * /home/youruser/backup-timescaledb-to-minio.sh >> /var/log/timescaledb-backup.log 2>&1
+
+
+
+
+mc cp minio/timescaledb-backups/yourfile.dump .
+pg_restore -d your_db -c yourfile.dump
