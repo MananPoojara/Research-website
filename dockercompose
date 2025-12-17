@@ -219,3 +219,12 @@ Sub ConvertDates_YYYYMMDD_to_DDMMYYYY()
     MsgBox "All dates converted from YYYY-MM-DD to DD-MM-YYYY", vbInformation
 
 End Sub
+
+
+
+
+
+
+// Red candle :
+Find : ([Rr][Ee][Dd])[ ]([Cc][Aa][Nn][Dd][Ll][Ee])
+Replace With : Red candle
