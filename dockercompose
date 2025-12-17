@@ -228,3 +228,33 @@ End Sub
 // Red candle :
 Find : ([Rr][Ee][Dd])[ ]([Cc][Aa][Nn][Dd][Ll][Ee])
 Replace With : Red candle
+
+#---------------------------------------------------------------------------------#
+. and , pattern to -
+
+from 
+([0-9]+)[\.,][ ]*([0-9]+)
+to
+\1-\2
+
+Macro code
+Sub Convert_ATR_DotComma_To_Hyphen()
+
+    Dim rng As Range
+    Set rng = ActiveDocument.Content
+
+    With rng.Find
+        .ClearFormatting
+        .Text = "([0-9]+)[\.,][ ]*([0-9]+)"
+        .Replacement.Text = "\1-\2"
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchWildcards = True
+        .Execute Replace:=wdReplaceAll
+    End With
+
+    MsgBox "ATR values converted to hyphen format.", vbInformation
+
+End Sub
+#-------------------------------------------------------------------------------------------#
