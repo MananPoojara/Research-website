@@ -258,3 +258,126 @@ Sub Convert_ATR_DotComma_To_Hyphen()
 
 End Sub
 #-------------------------------------------------------------------------------------------#
+
+
+----- clean table structure
+
+
+Sub CleanSpacingAroundTables()
+    Dim doc As Document
+    Dim tbl As Table
+    Dim r As Range
+    Dim paraAbove As Paragraph
+    Dim tmpRange As Range
+    
+    Set doc = ActiveDocument
+    
+    For Each tbl In doc.Tables
+        
+        '---------------------------
+        ' 1) CLEAN BEFORE TABLE
+        '---------------------------
+        ' Range at the very start of the table
+        Set r = tbl.Range
+        r.Collapse Direction:=wdCollapseStart
+        
+        ' Move to the paragraph just before the table (if any)
+        On Error Resume Next
+        r.MoveStart wdParagraph, -1
+        On Error GoTo 0
+        
+        ' If we couldn't move up (table is first thing in doc), skip
+        If r.Start = tbl.Range.Start Then
+            GoTo AfterTableSpacing
+        End If
+        
+        ' r now covers the paragraph immediately above the table
+        Set paraAbove = r.Paragraphs(1)
+        
+        ' A) Remove multiple empty paragraphs directly above the table,
+        '    but keep the first non-empty paragraph (your heading/text).
+        Set tmpRange = paraAbove.Range
+        
+        ' Expand upwards while previous paragraphs are empty
+        Do
+            Dim prevPara As Paragraph
+            Set prevPara = tmpRange.Previous(wdParagraph, 1)
+            
+            If prevPara Is Nothing Then Exit Do
+            
+            ' Check if previous paragraph is completely empty/whitespace
+            If Trim(Replace(prevPara.Range.Text, vbCr, "")) = "" Then
+                ' Include this empty paragraph in our tmpRange
+                tmpRange.SetRange Start:=prevPara.Range.Start, End:=tmpRange.End
+            Else
+                Exit Do
+            End If
+        Loop
+        
+        ' Now tmpRange contains all empty paragraphs above the original paraAbove.
+        ' We delete them, but keep paraAbove itself.
+        ' (So only pure blank lines are removed.)
+        If tmpRange.Start < paraAbove.Range.Start Then
+            tmpRange.Delete
+        End If
+        
+        ' B) Set a controlled SpaceAfter on the remaining paragraph above the table
+        '    (your heading or body text).
+        With paraAbove.Format
+            .SpaceAfter = 6    ' << change this to 0, 6, 8, 12 as you like
+            .SpaceBefore = 0   ' optional: ensure no big space before
+        End With
+        
+AfterTableSpacing:
+
+        '---------------------------
+        ' 2) CLEAN AFTER TABLE (optional, to remove big gaps)
+        '---------------------------
+        ' Range at the very end of the table
+        Set r = tbl.Range
+        r.Collapse Direction:=wdCollapseEnd
+        
+        ' Now r is at the paragraph immediately AFTER the table
+        ' We will remove multiple empty paragraphs after the table,
+        ' but leave ONE paragraph (so you still have normal separation).
+        
+        Dim paraAfter As Paragraph
+        On Error Resume Next
+        Set paraAfter = r.Paragraphs(1)
+        On Error GoTo 0
+        
+        If Not paraAfter Is Nothing Then
+            ' Build a range that covers all following empty paragraphs
+            Set tmpRange = paraAfter.Range
+            
+            Do
+                Dim nextPara As Paragraph
+                Set nextPara = tmpRange.Next(wdParagraph, 1)
+                
+                If nextPara Is Nothing Then Exit Do
+                
+                ' Check if next paragraph is empty
+                If Trim(Replace(nextPara.Range.Text, vbCr, "")) = "" Then
+                    ' Include the empty paragraph in tmpRange
+                    tmpRange.SetRange Start:=tmpRange.Start, End:=nextPara.Range.End
+                Else
+                    Exit Do
+                End If
+            Loop
+            
+            ' We want to leave ONE paragraph after the table, so:
+            ' - if tmpRange covers more than paraAfter, delete only the extra empties.
+            If tmpRange.End > paraAfter.Range.End Then
+                Dim delRange As Range
+                Set delRange = doc.Range(Start:=paraAfter.Range.End, End:=tmpRange.End)
+                delRange.Delete
+            End If
+        End If
+        
+    Next tbl
+    
+    MsgBox "Spacing around tables has been cleaned (no changes inside tables).", vbInformation
+End Sub
+
+
+#---------------------------------------------------------------------------------------------#
