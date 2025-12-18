@@ -22,23 +22,41 @@ Sub FormatAllStrategyPerformanceTables()
     End If
 
 End Sub
-
-
-' =============================
-' FORMAT ONE TABLE
-' =============================
 Sub FormatTargetTable(tbl As Table)
 
-    Dim lastRow As Long
-    Dim r As Long, c As Cell
+    Dim totalWidth As Single
+    Dim i As Integer
+    Dim otherCols As Integer
 
     On Error Resume Next
 
-    ' ---- COLUMN WIDTH FIX ----
+    ' ============================
+    ' EXACT RULER POSITIONING
+    ' ============================
     tbl.AllowAutoFit = False
+    tbl.Rows.Alignment = wdAlignRowLeft
+
+    ' Left edge at 1 cm
+    tbl.Rows.LeftIndent = CentimetersToPoints(1)
+
+    ' Table width: 1 cm ? 14 cm = 13 cm
+    totalWidth = CentimetersToPoints(13)
+    tbl.PreferredWidthType = wdPreferredWidthPoints
+    tbl.PreferredWidth = totalWidth
+
+    ' ============================
+    ' COLUMN WIDTHS
+    ' ============================
     tbl.Columns(1).Width = CentimetersToPoints(6)
 
-    ' ---- RENAME ROW LABELS ----
+    otherCols = tbl.Columns.Count - 1
+    For i = 2 To tbl.Columns.Count
+        tbl.Columns(i).Width = (totalWidth - tbl.Columns(1).Width) / otherCols
+    Next i
+
+    ' ============================
+    ' ROW LABELS
+    ' ============================
     SetLabel tbl, 1, "Period"
     SetLabel tbl, 2, "Total Gross Profit %"
     SetLabel tbl, 3, "Total Net Profit %"
@@ -51,35 +69,31 @@ Sub FormatTargetTable(tbl As Table)
     SetLabel tbl, 10, "Max Drawdown %"
     SetLabel tbl, 11, "CAR/MDD"
 
-    ' ---- CLEAR ALL BOLD FIRST ----
+    ' ============================
+    ' BOLD RULES
+    ' ============================
     tbl.Range.Font.Bold = False
+    BoldRow tbl, 1
+    BoldRow tbl, 3
+    BoldRow tbl, 4
+    BoldRow tbl, 7
+    BoldRow tbl, 8
 
-    ' ---- APPLY WHOLE-ROW BOLD ----
-    BoldRow tbl, 1     ' Period header
-    BoldRow tbl, 3     ' Total Net Profit %
-    BoldRow tbl, 4     ' Net Avg. Profit/Loss %
-    BoldRow tbl, 7     ' Net Win %
-    BoldRow tbl, 8     ' Net Monthly Thickness %
-
-    ' ---- FIX BOTTOM BORDER ----
-    lastRow = tbl.Rows.Count
-    For Each c In tbl.Rows(lastRow).Cells
-        With c.Borders(wdBorderBottom)
-            .LineStyle = wdLineStyleSingle
-            .LineWidth = wdLineWidth150pt
-            .Color = wdColorBlack
-        End With
-    Next c
-
-    ' ---- ENSURE OUTSIDE BORDERS ----
-    tbl.Borders.OutsideLineStyle = wdLineStyleSingle
-    tbl.Borders.OutsideLineWidth = wdLineWidth150pt
-    tbl.Borders.OutsideColor = wdColorBlack
+    ' ============================
+    ' FULL GRID BORDERS
+    ' ============================
+    With tbl.borders
+        .InsideLineStyle = wdLineStyleSingle
+        .InsideLineWidth = wdLineWidth050pt
+        .OutsideLineStyle = wdLineStyleSingle
+        .OutsideLineWidth = wdLineWidth150pt
+        .InsideColor = wdColorBlack
+        .OutsideColor = wdColorBlack
+    End With
 
     On Error GoTo 0
 
 End Sub
-
 
 ' =============================
 ' SET LABEL TEXT
@@ -109,3 +123,4 @@ Function CleanCellText(txt As String) As String
     CleanCellText = Replace(CleanCellText, Chr(7), "")
     CleanCellText = Trim(CleanCellText)
 End Function
+
