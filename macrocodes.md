@@ -37,10 +37,10 @@ Sub FormatTargetTable(tbl As Table)
     tbl.Rows.Alignment = wdAlignRowLeft
 
     ' Left edge at 1 cm
-    tbl.Rows.LeftIndent = CentimetersToPoints(1)
+    tbl.Rows.LeftIndent = CentimetersToPoints(0.3)
 
     ' Table width: 1 cm ? 14 cm = 13 cm
-    totalWidth = CentimetersToPoints(13)
+    totalWidth = CentimetersToPoints(14.6)
     tbl.PreferredWidthType = wdPreferredWidthPoints
     tbl.PreferredWidth = totalWidth
 
@@ -83,11 +83,10 @@ Sub FormatTargetTable(tbl As Table)
     ' FULL GRID BORDERS
     ' ============================
     With tbl.borders
-        .InsideLineStyle = wdLineStyleSingle
-        .InsideLineWidth = wdLineWidth050pt
+
         .OutsideLineStyle = wdLineStyleSingle
         .OutsideLineWidth = wdLineWidth150pt
-        .InsideColor = wdColorBlack
+
         .OutsideColor = wdColorBlack
     End With
 
