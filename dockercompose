@@ -381,3 +381,112 @@ End Sub
 
 
 #---------------------------------------------------------------------------------------------#
+
+
+
+
+
+Sub SimpleTableRestructure()
+    Dim doc As Document
+    Dim tbl As Table
+    Dim i As Integer
+    
+    Set doc = ActiveDocument
+    
+    ' Loop through all tables in document
+    For i = 1 To doc.Tables.Count
+        Set tbl = doc.Tables(i)
+        
+        ' Check if table matches our criteria (adjust as needed)
+        If tbl.Rows.Count = 12 And tbl.Columns.Count = 4 Then
+            Call ReorderTableRows(tbl)
+        End If
+    Next i
+    
+    MsgBox "Tables restructured successfully!"
+End Sub
+
+Sub ReorderTableRows(tbl As Table)
+    On Error GoTo ErrorHandler
+    
+    ' Store original data
+    Dim originalData(1 To 12, 1 To 4) As String
+    Dim i As Integer, j As Integer
+    
+    ' Extract all data
+    For i = 1 To 12
+        For j = 1 To 4
+            originalData(i, j) = Replace(Replace(tbl.Cell(i, j).Range.Text, Chr(13), ""), Chr(7), "")
+        Next j
+    Next i
+    
+    ' Reorder according to your specification
+    ' Row 1: Period (stays)
+    ' Row 2: Total Gross Profit (was row 3)
+    tbl.Cell(2, 1).Range.Text = originalData(3, 1)
+    tbl.Cell(2, 2).Range.Text = originalData(3, 2)
+    tbl.Cell(2, 3).Range.Text = originalData(3, 3)
+    tbl.Cell(2, 4).Range.Text = originalData(3, 4)
+    
+    ' Row 3: Total Net Profit (was row 4)
+    tbl.Cell(3, 1).Range.Text = originalData(4, 1)
+    tbl.Cell(3, 2).Range.Text = originalData(4, 2)
+    tbl.Cell(3, 3).Range.Text = originalData(4, 3)
+    tbl.Cell(3, 4).Range.Text = originalData(4, 4)
+    
+    ' Row 4: Avg. Net Profit (was row 5)
+    tbl.Cell(4, 1).Range.Text = originalData(5, 1)
+    tbl.Cell(4, 2).Range.Text = originalData(5, 2)
+    tbl.Cell(4, 3).Range.Text = originalData(5, 3)
+    tbl.Cell(4, 4).Range.Text = originalData(5, 4)
+    
+    ' Row 5: Avg Days Held (was row 7)
+    tbl.Cell(5, 1).Range.Text = originalData(7, 1)
+    tbl.Cell(5, 2).Range.Text = originalData(7, 2)
+    tbl.Cell(5, 3).Range.Text = originalData(7, 3)
+    tbl.Cell(5, 4).Range.Text = originalData(7, 4)
+    
+    ' Row 6: Trades (was row 2)
+    tbl.Cell(6, 1).Range.Text = originalData(2, 1)
+    tbl.Cell(6, 2).Range.Text = originalData(2, 2)
+    tbl.Cell(6, 3).Range.Text = originalData(2, 3)
+    tbl.Cell(6, 4).Range.Text = originalData(2, 4)
+    
+    ' Row 7: Net Win% (was row 8)
+    tbl.Cell(7, 1).Range.Text = originalData(8, 1)
+    tbl.Cell(7, 2).Range.Text = originalData(8, 2)
+    tbl.Cell(7, 3).Range.Text = originalData(8, 3)
+    tbl.Cell(7, 4).Range.Text = originalData(8, 4)
+    
+    ' Row 8: Net Month. Thickness (was row 6)
+    tbl.Cell(8, 1).Range.Text = originalData(6, 1)
+    tbl.Cell(8, 2).Range.Text = originalData(6, 2)
+    tbl.Cell(8, 3).Range.Text = originalData(6, 3)
+    tbl.Cell(8, 4).Range.Text = originalData(6, 4)
+    
+    ' Row 9: CAGR (was row 10)
+    tbl.Cell(9, 1).Range.Text = originalData(10, 1)
+    tbl.Cell(9, 2).Range.Text = originalData(10, 2)
+    tbl.Cell(9, 3).Range.Text = originalData(10, 3)
+    tbl.Cell(9, 4).Range.Text = originalData(10, 4)
+    
+    ' Row 10: DD (was row 11)
+    tbl.Cell(10, 1).Range.Text = originalData(11, 1)
+    tbl.Cell(10, 2).Range.Text = originalData(11, 2)
+    tbl.Cell(10, 3).Range.Text = originalData(11, 3)
+    tbl.Cell(10, 4).Range.Text = originalData(11, 4)
+    
+    ' Row 11: CAR/MDD (was row 12)
+    tbl.Cell(11, 1).Range.Text = originalData(12, 1)
+    tbl.Cell(11, 2).Range.Text = originalData(12, 2)
+    tbl.Cell(11, 3).Range.Text = originalData(12, 3)
+    tbl.Cell(11, 4).Range.Text = originalData(12, 4)
+    
+    ' Delete the "Years in Market" row (was row 9, now becomes row 12)
+    tbl.Rows(12).Delete
+    
+    Exit Sub
+    
+ErrorHandler:
+    MsgBox "Error restructuring table: " & Err.Description
+End Sub
