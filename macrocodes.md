@@ -27,6 +27,7 @@ Sub FormatTargetTable(tbl As Table)
     Dim totalWidth As Single
     Dim i As Integer
     Dim otherCols As Integer
+    Dim r As Row, c As Cell
 
     On Error Resume Next
 
@@ -36,10 +37,8 @@ Sub FormatTargetTable(tbl As Table)
     tbl.AllowAutoFit = False
     tbl.Rows.Alignment = wdAlignRowLeft
 
-    ' Left edge at 1 cm
     tbl.Rows.LeftIndent = CentimetersToPoints(0.3)
 
-    ' Table width: 1 cm ? 14 cm = 13 cm
     totalWidth = CentimetersToPoints(14.6)
     tbl.PreferredWidthType = wdPreferredWidthPoints
     tbl.PreferredWidth = totalWidth
@@ -80,21 +79,48 @@ Sub FormatTargetTable(tbl As Table)
     BoldRow tbl, 8
 
     ' ============================
-    ' FULL GRID BORDERS
+    ' REMOVE ALL CELL BORDERS
     ' ============================
-    With tbl.borders
+    For Each r In tbl.Rows
+        For Each c In r.Cells
+            c.Borders.Enable = False
+        Next c
+    Next r
 
+    ' ============================
+    ' OUTSIDE BORDER
+    ' ============================
+    With tbl.Borders
         .OutsideLineStyle = wdLineStyleSingle
-        .OutsideLineWidth = wdLineWidth150pt
-
+        .OutsideLineWidth = wdLineWidth100pt
         .OutsideColor = wdColorBlack
     End With
 
+    ' ============================
+    ' COLUMN 1 RIGHT BORDER
+    ' ============================
+    For Each c In tbl.Columns(1).Cells
+        With c.Borders(wdBorderRight)
+            .LineStyle = wdLineStyleSingle
+            .LineWidth = wdLineWidth100pt
+            .Color = wdColorBlack
+        End With
+    Next c
+
+    ' ============================
+    ' HEADER BOTTOM BORDER (ROW 1)
+    ' ============================
+    For Each c In tbl.Rows(1).Cells
+        With c.Borders(wdBorderBottom)
+            .LineStyle = wdLineStyleSingle
+            .LineWidth = wdLineWidth100pt
+            .Color = wdColorBlack
+        End With
+    Next c
+
     On Error GoTo 0
 
-End Sub
-
-' =============================
+End Sub ' =============================
 ' SET LABEL TEXT
 ' =============================
 Sub SetLabel(tbl As Table, rowNum As Long, txt As String)
