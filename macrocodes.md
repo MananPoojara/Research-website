@@ -92,20 +92,22 @@ Sub FormatTargetTable(tbl As Table)
     ' ============================
     With tbl.Borders
         .OutsideLineStyle = wdLineStyleSingle
-        .OutsideLineWidth = wdLineWidth100pt
+        .OutsideLineWidth = wdLineWidth150pt
         .OutsideColor = wdColorBlack
     End With
 
     ' ============================
     ' COLUMN 1 RIGHT BORDER
     ' ============================
-    For Each c In tbl.Columns(1).Cells
-        With c.Borders(wdBorderRight)
+    Dim r1 As Long
+
+    For r1 = 2 To tbl.Rows.Count
+        With tbl.Cell(r1, 1).Borders(wdBorderRight)
             .LineStyle = wdLineStyleSingle
-            .LineWidth = wdLineWidth100pt
+            .LineWidth = wdLineWidth050pt
             .Color = wdColorBlack
         End With
-    Next c
+    Next r1
 
     ' ============================
     ' HEADER BOTTOM BORDER (ROW 1)
@@ -113,7 +115,7 @@ Sub FormatTargetTable(tbl As Table)
     For Each c In tbl.Rows(1).Cells
         With c.Borders(wdBorderBottom)
             .LineStyle = wdLineStyleSingle
-            .LineWidth = wdLineWidth100pt
+            .LineWidth = wdLineWidth050pt
             .Color = wdColorBlack
         End With
     Next c
@@ -148,4 +150,5 @@ Function CleanCellText(txt As String) As String
     CleanCellText = Replace(CleanCellText, Chr(7), "")
     CleanCellText = Trim(CleanCellText)
 End Function
+
 
