@@ -152,3 +152,101 @@ Function CleanCellText(txt As String) As String
 End Function
 
 
+
+
+//---------------------------------Chart Adjustment------------------------------------//
+Sub FixAndCenterLinkedChartsBelowStrategyHeading()
+
+    Dim p As Paragraph
+    Dim anchorPos As Long
+    Dim ils As InlineShape
+    Dim shp As Shape
+    Dim pageWidth As Single
+    Dim foundHeading As Boolean
+
+    foundHeading = False
+    anchorPos = 0
+
+    ' --------------------------------------------
+    ' 1. Find heading position
+    ' --------------------------------------------
+    For Each p In ActiveDocument.Paragraphs
+        If InStr(1, p.Range.Text, _
+            "Strategy Performance (From 01-01-2008 to 02-12-2025):", _
+            vbTextCompare) > 0 Then
+
+            anchorPos = p.Range.End
+            foundHeading = True
+            Exit For
+        End If
+    Next p
+
+    If Not foundHeading Then
+        MsgBox "Strategy Performance heading not found.", vbExclamation
+        Exit Sub
+    End If
+
+    ' Page width for centering
+    pageWidth = ActiveDocument.PageSetup.PageWidth _
+                - ActiveDocument.PageSetup.LeftMargin _
+                - ActiveDocument.PageSetup.RightMargin
+
+    ' --------------------------------------------
+    ' 2. HANDLE INLINE LINKED CHARTS
+    ' --------------------------------------------
+    For Each ils In ActiveDocument.InlineShapes
+
+        If ils.Range.Start > anchorPos Then
+            If ils.Type = wdInlineShapeChart Then
+
+                ' Convert inline → floating
+                Set shp = ils.ConvertToShape
+
+                Call FormatFloatingChart(shp, pageWidth)
+            End If
+        End If
+
+    Next ils
+
+    ' --------------------------------------------
+    ' 3. HANDLE FLOATING LINKED CHARTS
+    ' --------------------------------------------
+    For Each shp In ActiveDocument.Shapes
+
+        If shp.Anchor.Start > anchorPos Then
+            If shp.HasChart Then
+                Call FormatFloatingChart(shp, pageWidth)
+            End If
+        End If
+
+    Next shp
+
+    MsgBox "All linked charts below heading formatted correctly.", vbInformation
+
+End Sub
+
+
+' ==================================================
+' FORMAT FLOATING CHART (THE KEY PART)
+' ==================================================
+Sub FormatFloatingChart(shp As Shape, pageWidth As Single)
+
+    With shp
+        ' Unlock layout constraints
+        .LockAspectRatio = msoFalse
+        .RelativeHorizontalPosition = wdRelativeHorizontalPositionMargin
+        .RelativeVerticalPosition = wdRelativeVerticalPositionParagraph
+
+        ' Disable wrapping issues
+        .WrapFormat.Type = wdWrapNone
+
+        ' Set size
+        .Width = CentimetersToPoints(14.29)
+        .Height = CentimetersToPoints(14.29)
+
+        ' Center horizontally
+        .Left = (pageWidth - .Width) / 2
+
+    End With
+
+End Sub
