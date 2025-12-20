@@ -253,22 +253,19 @@ End Sub
 
 
 #------------------------------------------------------------------------------#
-Sub FixTradesheetHeaderRow()
+Sub SetTradesheetColumnWidths()
 
     Dim p As Paragraph
     Dim tbl As Table
-    Dim hdrRow As Row
-    Dim c As Cell
-    Dim txt As String
     Dim headingPos As Long
     Dim found As Boolean
 
     found = False
     headingPos = -1
 
-    ' ------------------------------------------------
-    ' 1. Find heading that starts with "Tradesheet:"
-    ' ------------------------------------------------
+    ' ----------------------------------------
+    ' 1. Find Tradesheet heading
+    ' ----------------------------------------
     For Each p In ActiveDocument.Paragraphs
         If InStr(1, p.Range.Text, "Tradesheet:", vbTextCompare) > 0 Then
             headingPos = p.Range.End
@@ -281,9 +278,9 @@ Sub FixTradesheetHeaderRow()
         Exit Sub
     End If
 
-    ' ------------------------------------------------
-    ' 2. Find first table AFTER the heading
-    ' ------------------------------------------------
+    ' ----------------------------------------
+    ' 2. Find first table after heading
+    ' ----------------------------------------
     For Each tbl In ActiveDocument.Tables
         If tbl.Range.Start > headingPos Then
             found = True
@@ -292,39 +289,27 @@ Sub FixTradesheetHeaderRow()
     Next tbl
 
     If Not found Then
-        MsgBox "Tradesheet table not found below heading.", vbExclamation
+        MsgBox "Tradesheet table not found.", vbExclamation
         Exit Sub
     End If
 
-    ' ------------------------------------------------
-    ' 3. Lock table layout (critical)
-    ' ------------------------------------------------
+    ' ----------------------------------------
+    ' 3. Lock layout
+    ' ----------------------------------------
     tbl.AllowAutoFit = False
 
-    ' ------------------------------------------------
-    ' 4. Fix HEADER ROW (row 1 only)
-    ' ------------------------------------------------
-    Set hdrRow = tbl.Rows(1)
+    ' ----------------------------------------
+    ' 4. Apply exact column widths (cm)
+    ' ----------------------------------------
+    tbl.Columns(1).Width = CentimetersToPoints(2.2)
+    tbl.Columns(2).Width = CentimetersToPoints(1.93)
+    tbl.Columns(3).Width = CentimetersToPoints(2.3)
+    tbl.Columns(4).Width = CentimetersToPoints(1.9)
+    tbl.Columns(5).Width = CentimetersToPoints(1.71)
+    tbl.Columns(6).Width = CentimetersToPoints(1.86)
+    tbl.Columns(7).Width = CentimetersToPoints(1.51)
+    tbl.Columns(8).Width = CentimetersToPoints(1.88)
 
-    For Each c In hdrRow.Cells
-        txt = c.Range.Text
-
-        ' Remove line breaks and cell markers
-        txt = Replace(txt, Chr(13), " ")
-        txt = Replace(txt, Chr(7), "")
-
-        ' Normalize spaces
-        txt = Trim(txt)
-        Do While InStr(txt, "  ") > 0
-            txt = Replace(txt, "  ", " ")
-        Loop
-
-        c.Range.Text = txt
-        c.Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
-    Next c
-
-    MsgBox "Tradesheet header fixed successfully without breaking grid.", vbInformation
+    MsgBox "Tradesheet column widths applied perfectly.", vbInformation
 
 End Sub
-
-
