@@ -250,3 +250,62 @@ Sub FormatFloatingChart(shp As Shape, pageWidth As Single)
     End With
 
 End Sub
+
+
+#------------------------------------------------------------------------------#
+Sub FixTradesheetHeaderRow()
+
+    Dim p As Paragraph
+    Dim tbl As Table
+    Dim hdrRow As Row
+    Dim c As Cell
+    Dim txt As String
+    Dim found As Boolean
+
+    found = False
+
+    ' ---------------------------------------
+    ' 1. Find "The Treadsheet" heading
+    ' ---------------------------------------
+    For Each p In ActiveDocument.Paragraphs
+        If InStr(1, p.Range.Text, "The Treadsheet", vbTextCompare) > 0 Then
+            If p.Range.Next(Unit:=wdTable).Tables.Count > 0 Then
+                Set tbl = p.Range.Next(Unit:=wdTable).Tables(1)
+                found = True
+            End If
+            Exit For
+        End If
+    Next p
+
+    If Not found Then
+        MsgBox "Tradesheet table not found below heading.", vbExclamation
+        Exit Sub
+    End If
+
+    ' ---------------------------------------
+    ' 2. Lock layout (critical)
+    ' ---------------------------------------
+    tbl.AllowAutoFit = False
+
+    ' ---------------------------------------
+    ' 3. Fix header row text
+    ' ---------------------------------------
+    Set hdrRow = tbl.Rows(1)
+
+    For Each c In hdrRow.Cells
+        txt = c.Range.Text
+
+        ' Remove cell end markers
+        txt = Replace(txt, Chr(13), " ")
+        txt = Replace(txt, Chr(7), "")
+
+        ' Clean double spaces
+        txt = Application.WorksheetFunction.Trim(txt)
+
+        c.Range.Text = txt
+        c.Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
+    Next c
+
+    MsgBox "Header row fixed without breaking table alignment.", vbInformation
+
+End Sub
