@@ -259,6 +259,9 @@ Sub SetTradesheetColumnWidths()
     Dim tbl As Table
     Dim headingPos As Long
     Dim found As Boolean
+    Dim widths As Variant
+    Dim i As Integer
+    Dim maxCols As Integer
 
     found = False
     headingPos = -1
@@ -299,17 +302,19 @@ Sub SetTradesheetColumnWidths()
     tbl.AllowAutoFit = False
 
     ' ----------------------------------------
-    ' 4. Apply exact column widths (cm)
+    ' 4. Column widths (cm) — SAFE ARRAY
     ' ----------------------------------------
-    tbl.Columns(1).Width = CentimetersToPoints(2.2)
-    tbl.Columns(2).Width = CentimetersToPoints(1.93)
-    tbl.Columns(3).Width = CentimetersToPoints(2.3)
-    tbl.Columns(4).Width = CentimetersToPoints(1.9)
-    tbl.Columns(5).Width = CentimetersToPoints(1.71)
-    tbl.Columns(6).Width = CentimetersToPoints(1.86)
-    tbl.Columns(7).Width = CentimetersToPoints(1.51)
-    tbl.Columns(8).Width = CentimetersToPoints(1.88)
+    widths = Array(2.2, 1.93, 2.3, 1.9, 1.71, 1.86, 1.51, 1.88)
 
-    MsgBox "Tradesheet column widths applied perfectly.", vbInformation
+    maxCols = tbl.Columns.Count
+    If maxCols > UBound(widths) + 1 Then
+        maxCols = UBound(widths) + 1
+    End If
+
+    For i = 1 To maxCols
+        tbl.Columns(i).Width = CentimetersToPoints(widths(i - 1))
+    Next i
+
+    MsgBox "Tradesheet column widths applied safely.", vbInformation
 
 End Sub
