@@ -295,12 +295,15 @@ Sub FixTradesheetHeaderRow()
     For Each c In hdrRow.Cells
         txt = c.Range.Text
 
-        ' Remove cell end markers
+        ' Remove cell markers and line breaks
         txt = Replace(txt, Chr(13), " ")
         txt = Replace(txt, Chr(7), "")
 
-        ' Clean double spaces
-        txt = Application.WorksheetFunction.Trim(txt)
+        ' Normalize spaces (Word-safe)
+        txt = Trim(txt)
+        Do While InStr(txt, "  ") > 0
+            txt = Replace(txt, "  ", " ")
+        Loop
 
         c.Range.Text = txt
         c.Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
