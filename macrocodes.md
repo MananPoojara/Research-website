@@ -266,24 +266,24 @@ Sub FixTradesheetHeaderRow()
     found = False
     headingPos = -1
 
-    ' ---------------------------------------
-    ' 1. Find "The Treadsheet" heading position
-    ' ---------------------------------------
+    ' ------------------------------------------------
+    ' 1. Find heading that starts with "Tradesheet:"
+    ' ------------------------------------------------
     For Each p In ActiveDocument.Paragraphs
-        If InStr(1, p.Range.Text, "The Treadsheet", vbTextCompare) > 0 Then
+        If InStr(1, p.Range.Text, "Tradesheet:", vbTextCompare) > 0 Then
             headingPos = p.Range.End
             Exit For
         End If
     Next p
 
     If headingPos = -1 Then
-        MsgBox "Heading 'The Treadsheet' not found.", vbExclamation
+        MsgBox "Tradesheet heading not found.", vbExclamation
         Exit Sub
     End If
 
-    ' ---------------------------------------
-    ' 2. Find FIRST table AFTER the heading
-    ' ---------------------------------------
+    ' ------------------------------------------------
+    ' 2. Find first table AFTER the heading
+    ' ------------------------------------------------
     For Each tbl In ActiveDocument.Tables
         If tbl.Range.Start > headingPos Then
             found = True
@@ -292,24 +292,24 @@ Sub FixTradesheetHeaderRow()
     Next tbl
 
     If Not found Then
-        MsgBox "Tradesheet table not found after heading.", vbExclamation
+        MsgBox "Tradesheet table not found below heading.", vbExclamation
         Exit Sub
     End If
 
-    ' ---------------------------------------
-    ' 3. Lock layout (critical)
-    ' ---------------------------------------
+    ' ------------------------------------------------
+    ' 3. Lock table layout (critical)
+    ' ------------------------------------------------
     tbl.AllowAutoFit = False
 
-    ' ---------------------------------------
-    ' 4. Fix header row text (ROW 1 ONLY)
-    ' ---------------------------------------
+    ' ------------------------------------------------
+    ' 4. Fix HEADER ROW (row 1 only)
+    ' ------------------------------------------------
     Set hdrRow = tbl.Rows(1)
 
     For Each c In hdrRow.Cells
         txt = c.Range.Text
 
-        ' Remove line breaks & cell markers
+        ' Remove line breaks and cell markers
         txt = Replace(txt, Chr(13), " ")
         txt = Replace(txt, Chr(7), "")
 
@@ -326,4 +326,5 @@ Sub FixTradesheetHeaderRow()
     MsgBox "Tradesheet header fixed successfully without breaking grid.", vbInformation
 
 End Sub
+
 
