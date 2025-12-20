@@ -253,15 +253,16 @@ End Sub
 
 
 #------------------------------------------------------------------------------#
-Sub SetTradesheetColumnWidths()
+Sub FixTradesheetColumnWidths_AllRows()
 
     Dim p As Paragraph
     Dim tbl As Table
     Dim headingPos As Long
     Dim found As Boolean
     Dim widths As Variant
-    Dim i As Integer
-    Dim maxCols As Integer
+    Dim r As Long
+    Dim c As Long
+    Dim maxCols As Long
 
     found = False
     headingPos = -1
@@ -302,19 +303,31 @@ Sub SetTradesheetColumnWidths()
     tbl.AllowAutoFit = False
 
     ' ----------------------------------------
-    ' 4. Column widths (cm) — SAFE ARRAY
+    ' 4. Expected column widths (cm)
     ' ----------------------------------------
     widths = Array(2.2, 1.93, 2.3, 1.9, 1.71, 1.86, 1.51, 1.88)
+    maxCols = UBound(widths) + 1
 
-    maxCols = tbl.Columns.Count
-    If maxCols > UBound(widths) + 1 Then
-        maxCols = UBound(widths) + 1
-    End If
+    ' ----------------------------------------
+    ' 5. Normalize ALL DATA ROWS
+    '    (do NOT touch header row = 1)
+    ' ----------------------------------------
+    For r = 2 To tbl.Rows.Count
+        ' Unmerge row completely
+        tbl.Rows(r).Cells.Merge
 
-    For i = 1 To maxCols
-        tbl.Columns(i).Width = CentimetersToPoints(widths(i - 1))
-    Next i
+        ' Split back into required columns
+        tbl.Rows(r).Cells(1).Split NumRows:=1, NumColumns:=maxCols
+    Next r
 
-    MsgBox "Tradesheet column widths applied safely.", vbInformation
+    ' ----------------------------------------
+    ' 6. Apply column widths (now consistent)
+    ' ----------------------------------------
+    For c = 1 To maxCols
+        tbl.Columns(c).Width = CentimetersToPoints(widths(c - 1))
+    Next c
+
+    MsgBox "Tradesheet columns fixed for ALL rows.", vbInformation
 
 End Sub
+
