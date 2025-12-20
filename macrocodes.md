@@ -260,46 +260,60 @@ Sub FixTradesheetHeaderRow()
     Dim hdrRow As Row
     Dim c As Cell
     Dim txt As String
+    Dim headingPos As Long
     Dim found As Boolean
 
     found = False
+    headingPos = -1
 
     ' ---------------------------------------
-    ' 1. Find "The Treadsheet" heading
+    ' 1. Find "The Treadsheet" heading position
     ' ---------------------------------------
     For Each p In ActiveDocument.Paragraphs
         If InStr(1, p.Range.Text, "The Treadsheet", vbTextCompare) > 0 Then
-            If p.Range.Next(Unit:=wdTable).Tables.Count > 0 Then
-                Set tbl = p.Range.Next(Unit:=wdTable).Tables(1)
-                found = True
-            End If
+            headingPos = p.Range.End
             Exit For
         End If
     Next p
 
-    If Not found Then
-        MsgBox "Tradesheet table not found below heading.", vbExclamation
+    If headingPos = -1 Then
+        MsgBox "Heading 'The Treadsheet' not found.", vbExclamation
         Exit Sub
     End If
 
     ' ---------------------------------------
-    ' 2. Lock layout (critical)
+    ' 2. Find FIRST table AFTER the heading
+    ' ---------------------------------------
+    For Each tbl In ActiveDocument.Tables
+        If tbl.Range.Start > headingPos Then
+            found = True
+            Exit For
+        End If
+    Next tbl
+
+    If Not found Then
+        MsgBox "Tradesheet table not found after heading.", vbExclamation
+        Exit Sub
+    End If
+
+    ' ---------------------------------------
+    ' 3. Lock layout (critical)
     ' ---------------------------------------
     tbl.AllowAutoFit = False
 
     ' ---------------------------------------
-    ' 3. Fix header row text
+    ' 4. Fix header row text (ROW 1 ONLY)
     ' ---------------------------------------
     Set hdrRow = tbl.Rows(1)
 
     For Each c In hdrRow.Cells
         txt = c.Range.Text
 
-        ' Remove cell markers and line breaks
+        ' Remove line breaks & cell markers
         txt = Replace(txt, Chr(13), " ")
         txt = Replace(txt, Chr(7), "")
 
-        ' Normalize spaces (Word-safe)
+        ' Normalize spaces
         txt = Trim(txt)
         Do While InStr(txt, "  ") > 0
             txt = Replace(txt, "  ", " ")
@@ -309,6 +323,7 @@ Sub FixTradesheetHeaderRow()
         c.Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
     Next c
 
-    MsgBox "Header row fixed without breaking table alignment.", vbInformation
+    MsgBox "Tradesheet header fixed successfully without breaking grid.", vbInformation
 
 End Sub
+
