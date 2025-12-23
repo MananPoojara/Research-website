@@ -622,3 +622,15 @@ router.get('/health', (req, res) => {
 module.exports = router;
 
 
+======================================================================================
+
+Initializing MinIO buckets...
+prisma:info Starting a postgresql pool with 13 connections.   
+Error ensuring bucket 'seasonality-uploads': S3 API Requests must be made to API port.
+Error initializing MinIO buckets: S3 API Requests must be made to API port.
+Failed to initialize MinIO buckets: S3 API Requests must be made to API port.
+Server starting without MinIO - uploads may fail
+Backend server running on port 3001
+Environment: development
+✅ Database connected successfully
+POST /api/upload 400 7.879 ms - 104
