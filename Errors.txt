@@ -1,13 +1,16 @@
-Sending request to: http://192.168.4.30:3001/api/upload
-page.js:55 File details: Objectname: "Seasonality.csv"size: 309513type: "text/csv"[[Prototype]]: Object
-page.js:36 Error fetching stats: AxiosError {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
-window.console.error @ app-index.js:33
-console.error @ hydration-error-info.js:63
-fetchStats @ page.js:36Understand this error
-192.168.4.30:3001/api/data/tickers:1  Failed to load resource: net::ERR_CONNECTION_TIMED_OUTUnderstand this error
-192.168.4.30:3001/api/data/aggregate?date=2025-12-23:1  Failed to load resource: net::ERR_CONNECTION_TIMED_OUTUnderstand this error
-page.js:79 Upload error details: {message: 'Network Error', response: undefined, status: undefined, url: 'http://192.168.4.30:3001/api/upload'}
-window.console.error @ app-index.js:33
-console.error @ hydration-error-info.js:63
-handleFileUpload @ page.js:79Understand this error
-192.168.4.30:3001/api/upload:1  Failed to load resource: net::ERR_CONNECTION_TIMED_OUTUnderstand this error
+{
+  "files": [
+    {
+      "name": "users_2024.csv",
+      "size": 24576
+    },
+    {
+      "name": "orders_2024.csv",
+      "size": 38912
+    },
+    {
+      "name": "products_2024.csv",
+      "size": 11240
+    }
+  ]
+}
