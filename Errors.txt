@@ -1,883 +1,185 @@
-page.js:81 
- POST http://192.168.4.30:3001/api/upload net::ERR_CONNECTION_REFUSED
-handleFileUpload	@	page.js:81
-handleUpload	@	FileUpload.js:54
+'use client'
 
+import { useState, useRef } from 'react'
+import { FaUpload, FaFileCsv, FaCheckCircle, FaTimesCircle } from 'react-icons/fa'
 
+export default function FileUpload({ onFileUpload, isLoading }) {
+    const [file, setFile] = useState(null)
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const [error, setError] = useState(null)
+    const fileInputRef = useRef(null)
 
-'use client';
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0]
 
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { FaUsers, FaUpload, FaChartBar, FaCog, FaSignOutAlt } from 'react-icons/fa';
-import FileUpload from '@/components/FileUpload';
-import UserManagement from '@/components/admin/UserManagement';
-import SystemStats from '@/components/admin/SystemStats';
-import DataManagement from '@/components/admin/DataManagement';
+        if (!selectedFile) return
 
-export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('upload');
-  const [isLoading, setIsLoading] = useState(false);
-  const [stats, setStats] = useState(null);
-
-  // API base URL
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
-  // Fetch system statistics
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        setIsLoading(true);
-        const [tickersResponse, dataResponse] = await Promise.all([
-          axios.get(`${API_BASE_URL}/api/data/tickers`),
-          axios.get(`${API_BASE_URL}/api/data/aggregate?date=${new Date().toISOString().split('T')[0]}`)
-        ]);
-
-        setStats({
-          tickerCount: tickersResponse.data.success ? tickersResponse.data.data.length : 0,
-          dataCount: dataResponse.data.success ? dataResponse.data.data.records.length : 0,
-          lastUpdated: new Date().toISOString()
-        });
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-        toast.error('Failed to fetch system statistics');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchStats();
-  }, []);
-
-  const handleFileUpload = async (file) => {
-    try {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      if (response.data.success) {
-        toast.success(`File uploaded successfully! ${response.data.data.recordsProcessed} records processed.`);
-        // Refresh stats after upload
-        const [tickersResponse, dataResponse] = await Promise.all([
-          axios.get(`${API_BASE_URL}/api/data/tickers`),
-          axios.get(`${API_BASE_URL}/api/data/aggregate?date=${new Date().toISOString().split('T')[0]}`)
-        ]);
-
-        setStats({
-          tickerCount: tickersResponse.data.success ? tickersResponse.data.data.length : 0,
-          dataCount: dataResponse.data.success ? dataResponse.data.data.records.length : 0,
-          lastUpdated: new Date().toISOString()
-        });
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      const errorMessage = error.response?.data?.message || 'Failed to upload file';
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    // Implement logout logic
-    toast.info('Logged out successfully');
-    // Redirect to login page
-    window.location.href = '/login';
-  };
-
-  return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-64 bg-white shadow-md">
-        <div className="p-4 border-b">
-          <h1 className="text-xl font-bold text-gray-800">Seasonality Admin</h1>
-        </div>
-
-        <nav className="p-4 space-y-2">
-          <button
-            onClick={() => setActiveTab('upload')}
-            className={`w-full flex items-center space-x-3 p-2 rounded-md ${
-              activeTab === 'upload' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            <FaUpload className="text-lg" />
-            <span>File Upload</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('data')}
-            className={`w-full flex items-center space-x-3 p-2 rounded-md ${
-              activeTab === 'data' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            <FaChartBar className="text-lg" />
-            <span>Data Management</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('users')}
-            className={`w-full flex items-center space-x-3 p-2 rounded-md ${
-              activeTab === 'users' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            <FaUsers className="text-lg" />
-            <span>User Management</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('settings')}
-            className={`w-full flex items-center space-x-3 p-2 rounded-md ${
-              activeTab === 'settings' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            <FaCog className="text-lg" />
-            <span>Settings</span>
-          </button>
-        </nav>
-
-        <div className="p-4 mt-auto border-t">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center space-x-3 p-2 rounded-md text-gray-600 hover:bg-gray-50"
-          >
-            <FaSignOutAlt className="text-lg" />
-            <span>Logout</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 p-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
-          <p className="text-gray-500">Manage your seasonality data and users</p>
-        </div>
-
-        {/* System Stats */}
-        {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <SystemStats
-              title="Total Tickers"
-              value={stats.tickerCount}
-              icon={<FaChartBar className="text-blue-500 text-2xl" />}
-            />
-            <SystemStats
-              title="Data Points"
-              value={stats.dataCount}
-              icon={<FaChartBar className="text-green-500 text-2xl" />}
-            />
-            <SystemStats
-              title="Last Updated"
-              value={new Date(stats.lastUpdated).toLocaleString()}
-              icon={<FaCog className="text-purple-500 text-2xl" />}
-            />
-          </div>
-        )}
-
-        {/* Tab Content */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          {activeTab === 'upload' && (
-            <div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-4">CSV File Upload</h3>
-              <FileUpload onFileUpload={handleFileUpload} isLoading={isLoading} />
-
-              <div className="mt-6 p-4 bg-gray-50 rounded-md">
-                <h4 className="font-medium text-gray-800 mb-2">Upload Instructions:</h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
-                  <li>Upload Seasonality.csv files only</li>
-                  <li>Maximum file size: 10MB</li>
-                  <li>Required columns: Date, Ticker, Close</li>
-                  <li>Optional columns: Open, High, Low, Volume, OpenInterest</li>
-                  <li>All files will be merged into the Seasonality dataset</li>
-                </ul>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'data' && (
-            <DataManagement />
-          )}
-
-          {activeTab === 'users' && (
-            <UserManagement />
-          )}
-
-          {activeTab === 'settings' && (
-            <div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-4">System Settings</h3>
-              <p className="text-gray-500">Configure system parameters and preferences</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-
-
-/**
- * Upload Routes
- * Handles CSV file uploads including bulk uploads with async processing
- */
-
-const express = require('express');
-const router = express.Router();
-const multer = require('multer');
-const { PrismaClient } = require('@prisma/client');
-const Bull = require('bull');
-const { getPresignedPutUrl, BUCKETS } = require('../config/minio');
-const authMiddleware = require('../middleware/authMiddleware');
-
-const prisma = new PrismaClient();
-
-// Apply auth middleware to bulk upload routes (requires authentication)
-router.use('/bulk', authMiddleware());
-
-// Configure multer for single file uploads
-const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-        fileSize: process.env.MAX_FILE_SIZE || 10 * 1024 * 1024, // 10MB default
-    },
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'text/csv' || file.originalname.endsWith('.csv')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only CSV files are allowed'), false);
-        }
-    },
-}).single('file'); // Field name must be 'file'
-
-// Create Bull queue for processing jobs
-const processingQueue = new Bull('csv-processing', {
-    redis: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT) || 6379,
-    },
-});
-
-/**
- * Generate unique object key for MinIO
- * @param {string} fileName - Original filename
- * @param {string} batchId - Batch ID (optional)
- * @returns {string} Object key
- */
-function generateObjectKey(fileName, batchId = null) {
-    const timestamp = Date.now();
-    const sanitizedName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
-    if (batchId) {
-        return `uploads/${batchId}/${timestamp}_${sanitizedName}`;
-    }
-    return `uploads/${timestamp}_${sanitizedName}`;
-}
-
-// =====================================================
-// SINGLE FILE UPLOAD (Legacy - processes synchronously)
-// =====================================================
-
-// Single file upload endpoint
-router.post('/', (req, res, next) => {
-    upload(req, res, async (err) => {
-        console.log('Upload attempt - Content-Type:', req.headers['content-type']);
-        console.log('Upload attempt - Files:', req.files);
-        console.log('Upload attempt - File:', req.file);
-
-        // Handle multer errors
-        if (err instanceof multer.MulterError) {
-            console.error('Multer error:', err.code, 'field:', err.field);
-            if (err.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({
-                    error: 'File too large',
-                    message: 'File size exceeds the limit of 10MB',
-                });
-            }
-            if (err.code === 'LIMIT_UNEXPECTED_FILE') {
-                return res.status(400).json({
-                    error: 'Unexpected file field',
-                    message: `Unexpected field name: "${err.field}". The field name must be "file" (lowercase). In Postman: Key="file", Type="File"`,
-                });
-            }
-            return res.status(400).json({
-                error: 'Upload error',
-                message: `Multer error: ${err.code} - ${err.message}`,
-            });
-        }
-        if (err) {
-            console.error('Upload error:', err.message);
-            return res.status(400).json({
-                error: 'Upload error',
-                message: err.message,
-            });
+        // Validate file type
+        if (!selectedFile.name.endsWith('.csv')) {
+            setError('Please select a CSV file')
+            return
         }
 
-        // Continue to processing
-        try {
-            if (!req.file) {
-                console.error('No file in request - Headers:', req.headers['content-type']);
-                return res.status(400).json({
-                    error: 'No file uploaded',
-                    message: 'Please upload a CSV file. In Postman, use form-data with key "file". Current content-type: ' + req.headers['content-type'],
-                });
-            }
-
-            console.log('Processing file:', req.file.originalname);
-
-            // Process the uploaded CSV file
-            const result = await processSingleFile(req.file);
-
-            res.status(200).json({
-                success: true,
-                message: 'File processed successfully',
-                data: {
-                    fileName: req.file.originalname,
-                    recordsProcessed: result.recordsProcessed,
-                    tickersFound: result.tickersFound,
-                    tickersCreated: result.tickersCreated,
-                    dataEntriesCreated: result.dataEntriesCreated,
-                },
-            });
-        } catch (error) {
-            console.error('Processing error:', error.message);
-            next(error);
+        // Validate file size (10MB limit)
+        if (selectedFile.size > 10 * 1024 * 1024) {
+            setError('File size exceeds 10MB limit')
+            return
         }
-    });
-});
 
-/**
- * Parse date string from CSV to Date object
- * Supports multiple date formats
- * @param {string} dateStr - Date string from CSV
- * @returns {Date|null} Parsed date or null if invalid
- */
-function parseDate(dateStr) {
-    if (!dateStr || !dateStr.trim()) return null;
-
-    const trimmed = dateStr.trim();
-
-    // Try direct parsing first
-    let date = new Date(trimmed);
-    if (!isNaN(date.getTime())) {
-        return date;
+        setFile(selectedFile)
+        setError(null)
     }
 
-    // Try common Indian date formats (DD-MM-YYYY, DD/MM/YYYY, DD.MM.YYYY)
-    const parts = trimmed.split(/[-/.]/);
-    if (parts.length === 3) {
-        const [day, month, year] = parts;
-        // Check if it looks like DD-MM-YYYY
-        if (day.length === 2 && month.length === 2 && year.length === 4) {
-            date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-            if (!isNaN(date.getTime())) {
-                return date;
-            }
-        }
-    }
-
-    // Try YYYY-MM-DD format
-    if (parts[0].length === 4 && parts[1].length === 2 && parts[2].length === 2) {
-        date = new Date(trimmed);
-        if (!isNaN(date.getTime())) {
-            return date;
-        }
-    }
-
-    return null;
-}
-
-/**
- * Process single CSV file
- * @param {Object} file - Multer file object
- * @returns {Promise<Object>} Processing result
- */
-async function processSingleFile(file) {
-    const csvContent = file.buffer.toString('utf-8');
-    const rows = csvContent.split('\n').filter(row => row.trim());
-    const headerRow = rows[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, ''));
-
-    const requiredColumns = ['date', 'ticker', 'close'];
-    const missingColumns = requiredColumns.filter(col => !headerRow.includes(col));
-
-    if (missingColumns.length > 0) {
-        throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
-    }
-
-    const data = [];
-    for (let i = 1; i < rows.length; i++) {
-        const values = rows[i].split(',').map(v => v.trim());
-        const row = {};
-        headerRow.forEach((header, index) => {
-            row[header] = values[index] || null;
-        });
-
-        // Parse date
-        const parsedDate = parseDate(row.date);
-        if (!parsedDate) {
-            console.warn(`Skipping row ${i + 1}: Invalid date "${row.date}"`);
-            continue;
+    const handleUpload = () => {
+        if (!file) {
+            setError('Please select a file first')
+            return
         }
 
-        data.push({
-            ...row,
-            date: parsedDate
-        });
-    }
+        setUploadProgress(0)
+        setError(null)
 
-    // Get or create tickers
-    const tickerSymbols = [...new Set(data.map(row => row.ticker))];
-    const tickerResults = await Promise.all(
-        tickerSymbols.map(symbol =>
-            prisma.ticker.upsert({
-                where: { symbol },
-                update: {},
-                create: { symbol },
-            })
-        )
-    );
-
-    const tickerMap = {};
-    tickerResults.forEach(t => {
-        tickerMap[t.symbol] = t.id;
-    });
-
-    // Batch insert data
-    const seasonalityData = data.map(row => ({
-        date: row.date,
-        tickerId: tickerMap[row.ticker],
-        open: parseFloat(row.open) || parseFloat(row.close) || 0,
-        high: parseFloat(row.high) || parseFloat(row.close) || 0,
-        low: parseFloat(row.low) || parseFloat(row.close) || 0,
-        close: parseFloat(row.close) || 0,
-        volume: parseFloat(row.volume) || 0,
-        openInterest: parseFloat(row.openinterest) || 0,
-    }));
-
-    // Insert in batches
-    const BATCH_SIZE = 1000;
-    let totalInserted = 0;
-
-    for (let i = 0; i < seasonalityData.length; i += BATCH_SIZE) {
-        const batch = seasonalityData.slice(i, i + BATCH_SIZE);
-
-        await prisma.$transaction(
-            batch.map(row =>
-                prisma.seasonalityData.upsert({
-                    where: {
-                        date_tickerId: {
-                            date: row.date,
-                            tickerId: row.tickerId,
-                        },
-                    },
-                    update: {
-                        open: row.open,
-                        high: row.high,
-                        low: row.low,
-                        close: row.close,
-                        volume: row.volume,
-                        openInterest: row.openInterest,
-                    },
-                    create: row,
-                })
-            )
-        );
-
-        totalInserted += batch.length;
-    }
-
-    return {
-        recordsProcessed: data.length,
-        tickersFound: tickerSymbols.length,
-        tickersCreated: tickerResults.filter(t => t.createdAt === t.updatedAt).length,
-        dataEntriesCreated: totalInserted,
-    };
-}
-
-// =====================================================
-// BULK UPLOAD (New - async processing with queue)
-// =====================================================
-
-/**
- * Generate presigned URLs for bulk upload
- * POST /api/upload/bulk/presign
- * Body: { files: [{ name: string, size: number }] }
- */
-router.post('/bulk/presign', async (req, res, next) => {
-    try {
-        const { files } = req.body;
-
-        if (!files || !Array.isArray(files) || files.length === 0) {
-            return res.status(400).json({
-                error: 'No files specified',
-                message: 'Please provide an array of files to upload',
-            });
-        }
-
-        if (files.length > 500) {
-            return res.status(400).json({
-                error: 'Too many files',
-                message: 'Maximum 500 files per batch upload',
-            });
-        }
-
-        // Generate batch ID
-        const batchId = `batch_${Date.now()}`;
-
-        // Generate presigned URLs for each file
-        const uploadUrls = files.map((file, index) => {
-            const objectKey = generateObjectKey(file.name, batchId);
-            return {
-                fileName: file.name,
-                fileSize: file.size,
-                objectKey,
-                uploadUrl: null, // Will be filled after async URL generation
-            };
-        });
-
-        // Generate URLs asynchronously (can be slow for many files)
-        const urlsWithPresigned = await Promise.all(
-            uploadUrls.map(async (item) => {
-                try {
-                    const presignedUrl = await getPresignedPutUrl(
-                        BUCKETS.UPLOADS,
-                        item.objectKey,
-                        3600 // 1 hour expiry
-                    );
-                    return {
-                        ...item,
-                        uploadUrl: presignedUrl,
-                    };
-                } catch (error) {
-                    console.error(`Error generating presigned URL for ${item.fileName}:`, error.message);
-                    return {
-                        ...item,
-                        uploadUrl: null,
-                        error: 'Failed to generate upload URL',
-                    };
+        // Simulate upload progress
+        const interval = setInterval(() => {
+            setUploadProgress((prev) => {
+                if (prev >= 90) {
+                    clearInterval(interval)
+                    return 90
                 }
+                return prev + 10
             })
-        );
+        }, 200)
 
-        res.json({
-            success: true,
-            data: {
-                batchId,
-                files: urlsWithPresigned,
-                expiresIn: 3600, // 1 hour
-            },
-        });
-    } catch (error) {
-        next(error);
-    }
-});
-
-/**
- * Confirm upload complete and start async processing
- * POST /api/upload/bulk/process
- * Body: { batchId: string, objectKeys: string[] }
- */
-router.post('/bulk/process', async (req, res, next) => {
-    try {
-        const { batchId, objectKeys, fileNames } = req.body;
-
-        if (!batchId || !objectKeys || !Array.isArray(objectKeys)) {
-            return res.status(400).json({
-                error: 'Invalid request',
-                message: 'Please provide batchId and objectKeys array',
-            });
-        }
-
-        // Check if batch already exists
-        const existingBatch = await prisma.uploadBatch.findUnique({
-            where: { id: batchId },
-        });
-
-        if (existingBatch) {
-            return res.status(400).json({
-                error: 'Batch already exists',
-                message: `Batch ${batchId} has already been submitted`,
-            });
-        }
-
-        // Create batch record
-        const batch = await prisma.uploadBatch.create({
-            data: {
-                id: batchId,
-                status: 'PENDING',
-                totalFiles: objectKeys.length,
-                processedFiles: 0,
-                failedFiles: 0,
-                files: {
-                    create: objectKeys.map((key, index) => ({
-                        objectKey: key,
-                        fileName: fileNames?.[index] || key.split('/').pop(),
-                        status: 'PENDING',
-                    })),
-                },
-            },
-        });
-
-        // Add all files to processing queue
-        await Promise.all(
-            objectKeys.map((objectKey, index) =>
-                processingQueue.add(
-                    {
-                        objectKey,
-                        batchId,
-                        fileIndex: index,
-                        fileName: fileNames?.[index] || objectKey.split('/').pop(),
-                        priority: 10 - Math.min(index, 10), // Earlier files higher priority
-                    },
-                    {
-                        priority: 10 - Math.min(index, 10),
-                        attempts: 3,
-                        backoff: { type: 'exponential', delay: 1000 },
+        // Call the upload handler
+        onFileUpload(file)
+            .then(() => {
+                clearInterval(interval)
+                setUploadProgress(100)
+                // Reset after successful upload
+                setTimeout(() => {
+                    setFile(null)
+                    setUploadProgress(0)
+                    if (fileInputRef.current) {
+                        fileInputRef.current.value = ''
                     }
-                )
-            )
-        );
-
-        res.json({
-            success: true,
-            data: {
-                batchId,
-                status: 'PROCESSING',
-                totalFiles: objectKeys.length,
-                message: `${objectKeys.length} files queued for processing`,
-            },
-        });
-    } catch (error) {
-        next(error);
+                }, 2000)
+            })
+            .catch((err) => {
+                clearInterval(interval)
+                setUploadProgress(0)
+                setError(err.message || 'Upload failed')
+            })
     }
-});
 
-/**
- * Get batch processing status
- * GET /api/upload/bulk/:batchId/status
- */
-router.get('/bulk/:batchId/status', async (req, res, next) => {
-    try {
-        const { batchId } = req.params;
+    const handleDrop = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
 
-        const batch = await prisma.uploadBatch.findUnique({
-            where: { id: batchId },
-            include: {
-                files: {
-                    select: {
-                        id: true,
-                        fileName: true,
-                        status: true,
-                        recordsProcessed: true,
-                        error: true,
-                        processedAt: true,
-                    },
-                    orderBy: { id: 'asc' },
-                },
-            },
-        });
-
-        if (!batch) {
-            return res.status(404).json({
-                error: 'Batch not found',
-                message: `No batch found with ID ${batchId}`,
-            });
+        if (e.type === 'dragover') {
+            e.currentTarget.classList.add('border-blue-500', 'bg-blue-50')
+            return
         }
 
-        // Get queue status
-        const queueStatus = await processingQueue.getJobCounts();
+        e.currentTarget.classList.remove('border-blue-500', 'bg-blue-50')
 
-        // Calculate progress
-        const progress = batch.totalFiles > 0
-            ? ((batch.processedFiles + batch.failedFiles) / batch.totalFiles) * 100
-            : 0;
-
-        res.json({
-            success: true,
-            data: {
-                batchId: batch.id,
-                status: batch.status,
-                progress: Math.round(progress * 100) / 100,
-                totalFiles: batch.totalFiles,
-                processedFiles: batch.processedFiles,
-                failedFiles: batch.failedFiles,
-                pendingFiles: batch.totalFiles - batch.processedFiles - batch.failedFiles,
-                createdAt: batch.createdAt,
-                updatedAt: batch.updatedAt,
-                queue: {
-                    waiting: queueStatus.waiting,
-                    active: queueStatus.active,
-                    completed: queueStatus.completed,
-                    failed: queueStatus.failed,
-                    delayed: queueStatus.delayed,
-                },
-                files: batch.files.map(f => ({
-                    ...f,
-                    status: f.status,
-                })),
-            },
-        });
-    } catch (error) {
-        next(error);
-    }
-});
-
-/**
- * List all batches
- * GET /api/upload/bulk
- */
-router.get('/bulk', async (req, res, next) => {
-    try {
-        const { status, limit = 20, offset = 0 } = req.query;
-
-        const where = {};
-        if (status) {
-            where.status = status;
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0]
+            const event = { target: { files: [file] } }
+            handleFileChange(event)
         }
-
-        const batches = await prisma.uploadBatch.findMany({
-            where,
-            orderBy: { createdAt: 'desc' },
-            take: parseInt(limit),
-            skip: parseInt(offset),
-            include: {
-                _count: {
-                    select: { files: true },
-                },
-            },
-        });
-
-        const total = await prisma.uploadBatch.count({ where });
-
-        res.json({
-            success: true,
-            data: {
-                batches: batches.map(b => ({
-                    batchId: b.id,
-                    status: b.status,
-                    totalFiles: b.totalFiles,
-                    processedFiles: b.processedFiles,
-                    failedFiles: b.failedFiles,
-                    progress: b.totalFiles > 0
-                        ? Math.round(((b.processedFiles + b.failedFiles) / b.totalFiles) * 10000) / 100
-                        : 0,
-                    createdAt: b.createdAt,
-                    updatedAt: b.updatedAt,
-                })),
-                pagination: {
-                    total,
-                    limit: parseInt(limit),
-                    offset: parseInt(offset),
-                },
-            },
-        });
-    } catch (error) {
-        next(error);
     }
-});
 
-/**
- * Retry failed files in a batch
- * POST /api/upload/bulk/:batchId/retry
- */
-router.post('/bulk/:batchId/retry', async (req, res, next) => {
-    try {
-        const { batchId } = req.params;
+    return (
+        <div className='space-y-4'>
+            <div
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
+                    error ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-blue-300'
+                }`}
+                onDrop={handleDrop}
+                onDragOver={handleDrop}
+                onDragLeave={(e) => {
+                    e.preventDefault()
+                    e.currentTarget.classList.remove('border-blue-500', 'bg-blue-50')
+                }}
+            >
+                <input
+                    type='file'
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept='.csv'
+                    className='hidden'
+                    id='file-upload'
+                    disabled={isLoading}
+                />
 
-        const batch = await prisma.uploadBatch.findUnique({
-            where: { id: batchId },
-            include: {
-                files: {
-                    where: { status: 'FAILED' },
-                },
-            },
-        });
+                {file ? (
+                    <div className='space-y-3'>
+                        <FaFileCsv className='mx-auto text-4xl text-blue-600' />
+                        <p className='font-medium text-gray-800'>{file.name}</p>
+                        <p className='text-sm text-gray-500'>{Math.round(file.size / 1024)} KB</p>
 
-        if (!batch) {
-            return res.status(404).json({
-                error: 'Batch not found',
-                message: `No batch found with ID ${batchId}`,
-            });
-        }
+                        {uploadProgress > 0 && (
+                            <div className='w-full bg-gray-200 rounded-full h-2.5'>
+                                <div
+                                    className='bg-blue-600 h-2.5 rounded-full transition-all duration-200'
+                                    style={{ width: `${uploadProgress}%` }}
+                                ></div>
+                            </div>
+                        )}
 
-        const failedFiles = batch.files;
-        if (failedFiles.length === 0) {
-            return res.status(400).json({
-                error: 'No failed files',
-                message: 'There are no failed files to retry in this batch',
-            });
-        }
+                        <button
+                            onClick={handleUpload}
+                            disabled={isLoading || uploadProgress > 0}
+                            className={`px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 ${
+                                isLoading || uploadProgress > 0 ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                        >
+                            {uploadProgress === 100 ? (
+                                <>
+                                    <FaCheckCircle className='inline mr-2' />
+                                    Upload Complete
+                                </>
+                            ) : uploadProgress > 0 ? (
+                                `Uploading... ${uploadProgress}%`
+                            ) : (
+                                <>
+                                    <FaUpload className='inline mr-2' />
+                                    Upload File
+                                </>
+                            )}
+                        </button>
+                    </div>
+                ) : (
+                    <div className='space-y-3'>
+                        <FaUpload className='mx-auto text-4xl text-gray-400' />
+                        <label
+                            htmlFor='file-upload'
+                            className='cursor-pointer text-blue-600 hover:text-blue-800 font-medium'
+                        >
+                            Click to browse or drag and drop
+                        </label>
+                        <p className='text-sm text-gray-500'>CSV files only (max 10MB)</p>
+                    </div>
+                )}
+            </div>
 
-        // Update batch status
-        await prisma.uploadBatch.update({
-            where: { id: batchId },
-            data: {
-                status: 'PROCESSING',
-                failedFiles: 0, // Reset failed count
-            },
-        });
+            {error && (
+                <div className='flex items-center p-3 bg-red-100 border border-red-200 rounded-md'>
+                    <FaTimesCircle className='text-red-600 mr-2' />
+                    <span className='text-red-700 text-sm'>{error}</span>
+                </div>
+            )}
 
-        // Reset file statuses
-        await prisma.uploadedFile.updateMany({
-            where: { batchId },
-            data: {
-                status: 'PENDING',
-                error: null,
-                processedAt: null,
-            },
-        });
-
-        // Re-add failed files to queue
-        await Promise.all(
-            failedFiles.map(file =>
-                processingQueue.add(
-                    {
-                        objectKey: file.objectKey,
-                        batchId,
-                        fileName: file.fileName,
-                        retry: true,
-                    },
-                    {
-                        priority: 1, // High priority for retries
-                        attempts: 3,
-                        backoff: { type: 'exponential', delay: 2000 },
-                    }
-                )
-            )
-        );
-
-        res.json({
-            success: true,
-            data: {
-                batchId,
-                status: 'PROCESSING',
-                filesRetried: failedFiles.length,
-                message: `${failedFiles.length} failed files queued for retry`,
-            },
-        });
-    } catch (error) {
-        next(error);
-    }
-});
-
-// Health check for upload service
-router.get('/health', (req, res) => {
-    res.json({
-        status: 'healthy',
-        service: 'upload-service',
-        maxFileSize: process.env.MAX_FILE_SIZE || '10MB',
-        features: {
-            singleUpload: true,
-            bulkUpload: true,
-            asyncProcessing: true,
-        },
-    });
-});
-
-module.exports = router;
+            <div className='p-4 bg-gray-50 rounded-md text-sm'>
+                <h4 className='font-medium text-gray-800 mb-2'>File Requirements:</h4>
+                <ul className='list-disc list-inside space-y-1 text-gray-600'>
+                    <li>File format: CSV (.csv)</li>
+                    <li>Maximum size: 10MB</li>
+                    <li>Required columns: Date, Ticker, Close</li>
+                    <li>Optional columns: Open, High, Low, Volume, OpenInterest</li>
+                    <li>Date format: YYYY-MM-DD</li>
+                </ul>
+            </div>
+        </div>
+    )
+}
