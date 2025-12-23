@@ -156,3 +156,27 @@ Invalid value for argument `date`: Provided Date object is invalid. Expected Dat
     at vn (C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\@prisma\client\runtime\library.js:29:5902)
 POST /api/upload 500 381.143 ms - 1245
 
+=====================================================================================================================================================
+
+Failed to load resource: net::ERR_CONNECTION_TIMED_OUTUnderstand this error
+page.js:96 Error uploading file: AxiosError {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
+window.console.error @ app-index.js:33
+console.error @ hydration-error-info.js:63
+handleFileUpload @ page.js:96
+await in handleFileUpload
+handleUpload @ FileUpload.js:54
+callCallback @ react-dom.development.js:20565
+invokeGuardedCallbackImpl @ react-dom.development.js:20614
+invokeGuardedCallback @ react-dom.development.js:20689
+invokeGuardedCallbackAndCatchFirstError @ react-dom.development.js:20703
+executeDispatch @ react-dom.development.js:32128
+processDispatchQueueItemsInOrder @ react-dom.development.js:32160
+processDispatchQueue @ react-dom.development.js:32173
+dispatchEventsForPlugins @ react-dom.development.js:32184
+eval @ react-dom.development.js:32374
+batchedUpdates$1 @ react-dom.development.js:24953
+batchedUpdates @ react-dom.development.js:28844
+dispatchEventForPluginEventSystem @ react-dom.development.js:32373
+dispatchEvent @ react-dom.development.js:30141
+dispatchDiscreteEvent @ react-dom.development.js:30112Understand this error
+page.js:81  POST http://192.168.4.30:3001/api/upload net::ERR_CONNECTION_TIMED_OUT
