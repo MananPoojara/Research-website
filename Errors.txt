@@ -1,16 +1,11 @@
 {
-  "files": [
-    {
-      "name": "users_2024.csv",
-      "size": 24576
-    },
-    {
-      "name": "orders_2024.csv",
-      "size": 38912
-    },
-    {
-      "name": "products_2024.csv",
-      "size": 11240
-    }
+  "batchId": "batch_1700000000000",
+  "objectKeys": [
+    "uploads/batch_1700000000000/170000001_nifty.csv",
+    "uploads/batch_1700000000000/170000002_banknifty.csv"
+  ],
+  "fileNames": [
+    "nifty.csv",
+    "banknifty.csv"
   ]
 }
