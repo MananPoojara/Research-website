@@ -1,0 +1,14 @@
+C:\Users\AFF34\Desktop\seasonality-website\apps\frontend>npm run dev
+
+> frontend@1.0.0 dev
+> next dev
+
+The module 'react-dom' was not found. Next.js requires that you include it in 'dependencies' of your 'package.json'. To add it, run 'npm install react-dom'
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1523ms
+ ○ Compiling / ...
+ ⨯ src\app\layout.js
+An error occurred in `next/font`.
