@@ -1,11 +1,113 @@
-{
-  "batchId": "batch_1700000000000",
-  "objectKeys": [
-    "uploads/batch_1700000000000/170000001_nifty.csv",
-    "uploads/batch_1700000000000/170000002_banknifty.csv"
-  ],
-  "fileNames": [
-    "nifty.csv",
-    "banknifty.csv"
-  ]
-}
+
+> backend@1.0.0 worker
+> node src/services/csvProcessorWorker.js
+
+========================================
+CSV Processor Worker Started
+Concurrency: 5
+Batch Size: 1000
+Queue: csv-processing
+========================================
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec  STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec ========================================        
+CSV Processor Worker Started
+Concurrency: 5
+Batch Size: 1000
+Queue: csv-processing
+========================================        
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec 
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
+[2025-12-23T12:03:36.690Z] Processing file: Seasonality.csv (Batch: batch_1766491027263)
+[2025-12-23T12:03:36.692Z] Processing file: Seasonality - Copy.csv (Batch: batch_1766491027263)
+[2025-12-23T12:03:37.063Z] Error processing Seasonality - Copy.csv:
+Invalid `prisma.seasonalityData.upsert()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:169:44
+
+  166
+  167 await prisma.$transaction(
+  168     batch.map(row =>
+→ 169         prisma.seasonalityData.upsert({
+                where: {
+                  date_tickerId: {        
+                    date: new Date("Invalid Date"),
+                          ~~~~~~~~~~~~~~~~~~~~~~~~
+                    tickerId: 2
+                  }
+                },
+                update: {
+                  open: 3318.05,
+                  high: 3364.8,
+                  low: 3315.6,
+                  close: 3364.1,
+                  volume: 0,
+                  openInterest: 0
+                },
+                create: {
+                  date: new Date("Invalid Date"),
+                  tickerId: 2,
+                  open: 3318.05,
+                  high: 3364.8,
+                  low: 3315.6,
+                  close: 3364.1,
+                  volume: 0,
+                  openInterest: 0
+                }
+              })
+
+Invalid value for argument `date`: Provided Date object is invalid. Expected Date.  
+[2025-12-23T12:03:37.233Z] Error processing Seasonality.csv:
+Invalid `prisma.seasonalityData.upsert()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:169:44
+
+  166
+  167 await prisma.$transaction(
+  168     batch.map(row =>
+→ 169         prisma.seasonalityData.upsert({
+                where: {
+                  date_tickerId: {        
+                    date: new Date("Invalid Date"),
+                          ~~~~~~~~~~~~~~~~~~~~~~~~
+                    tickerId: 1
+                  }
+                },
+                update: {
+                  open: 3318.05,
+                  high: 3364.8,
+                  low: 3315.6,
+                  close: 3364.1,
+                  volume: 0,
+                  openInterest: 0
+                },
+                create: {
+                  date: new Date("Invalid Date"),
+                  tickerId: 1,
+                  open: 3318.05,
+                  high: 3364.8,
+                  low: 3315.6,
+                  close: 3364.1,
+                  volume: 0,
+                  openInterest: 0
+                }
+              })
+
+Invalid value for argument `date`: Provided Date object is invalid. Expected Date.  
+[FAILED] Job 1: 
