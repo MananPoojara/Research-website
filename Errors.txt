@@ -1,8 +1,26 @@
-prisma.seasonalityData.upsert({
+await prisma.seasonalityData.upsert({
   where: {
     date_tickerId: {
       date: record.date,
       tickerId: tickerId
     }
+  },
+  update: {
+    open: record.open,
+    high: record.high,
+    low: record.low,
+    close: record.close,
+    volume: record.volume,
+    openInterest: record.openInterest
+  },
+  create: {
+    date: record.date,
+    open: record.open,
+    high: record.high,
+    low: record.low,
+    close: record.close,
+    volume: record.volume,
+    openInterest: record.openInterest,
+    tickerId: tickerId
   }
 })
