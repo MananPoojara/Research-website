@@ -17,11 +17,19 @@ An error occurred in `next/font`.
 
 ++==================================================
 
-page.js:96 Error uploading file: 
-AxiosError {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
+MulterError: Unexpected field
+    at wrappedFileFilter (C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\multer\index.js:40:19)      
+    at Multipart.<anonymous> (C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\multer\lib\make-middleware.js:109:7)
+    at Multipart.emit (node:events:508:28)
+    at HeaderParser.cb (C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\busboy\lib\types\multipart.js:358:14)
+    at HeaderParser.push (C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\busboy\lib\types\multipart.js:162:20)
+    at SBMH.ssCb [as _cb] (C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\busboy\lib\types\multipastststreamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\streamsearch\lib\sbmh.js:104:16)     
+    at Multipart._write (C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\busboy\lib\types\multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:570:12)  
+POST /api/upload 500 8.757 ms - 62
 
-page.js:81 
- POST http://192.168.4.30:3001/api/upload net::ERR_CONNECTION_TIMED_OUT
-handleFileUpload	@	page.js:81
-handleUpload	@	FileUpload.js:54
+
+
+
 
