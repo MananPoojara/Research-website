@@ -12,3 +12,16 @@ The module 'react-dom' was not found. Next.js requires that you include it in 'd
  ○ Compiling / ...
  ⨯ src\app\layout.js
 An error occurred in `next/font`.
+
+
+
+++==================================================
+
+page.js:96 Error uploading file: 
+AxiosError {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
+
+page.js:81 
+ POST http://192.168.4.30:3001/api/upload net::ERR_CONNECTION_TIMED_OUT
+handleFileUpload	@	page.js:81
+handleUpload	@	FileUpload.js:54
+
