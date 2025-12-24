@@ -1,13 +1,39 @@
 {
-  "batchId": "batch_1700000000000",
-  "objectKeys": [
-    "uploads/batch_1700000000000/nifty.csv",
-    "uploads/batch_1700000000000/banknifty.csv",
-    "uploads/batch_1700000000000/sensex.csv"
-  ],
-  "fileNames": [
-    "nifty.csv",
-    "banknifty.csv",
-    "sensex.csv"
-  ]
+    "success": true,
+    "data": {
+        "batchId": "batch_1766552001217",
+        "status": "FAILED",
+        "progress": 100,
+        "totalFiles": 2,
+        "processedFiles": 0,
+        "failedFiles": 2,
+        "pendingFiles": 0,
+        "createdAt": "2025-12-24T05:03:04.618Z",
+        "updatedAt": "2025-12-24T05:03:12.133Z",
+        "queue": {
+            "waiting": 0,
+            "active": 0,
+            "completed": 0,
+            "failed": 4,
+            "delayed": 0
+        },
+        "files": [
+            {
+                "id": 3,
+                "fileName": "Seasonality.csv",
+                "status": "FAILED",
+                "recordsProcessed": 0,
+                "error": "\nInvalid `prisma.seasonalityData.upsert()` invocation in\nC:\\Users\\AFF34\\Desktop\\seasonality-website\\apps\\backend\\src\\services\\csvProcessorWorker.js:169:44\n\n  166 \n  167 await prisma.$transaction(\n  168     batch.map(row =>\n→ 169         prisma.seasonalityData.upsert({\n                where: {\n                  date_tickerId: {\n                    date: new Date(\"Invalid Date\"),\n                          ~~~~~~~~~~~~~~~~~~~~~~~~\n                    tickerId: 4\n                  }\n                },\n                update: {\n                  open: 3318.05,\n                  high: 3364.8,\n                  low: 3315.6,\n                  close: 3364.1,\n                  volume: 0,\n                  openInterest: 0\n                },\n                create: {\n                  date: new Date(\"Invalid Date\"),\n                  tickerId: 4,\n                  open: 3318.05,\n                  high: 3364.8,\n                  low: 3315.6,\n                  close: 3364.1,\n                  volume: 0,\n                  openInterest: 0\n                }\n              })\n\nInvalid value for argument `date`: Provided Date object is invalid. Expected Date.",
+                "processedAt": null
+            },
+            {
+                "id": 4,
+                "fileName": "Seasonality - Copy.csv",
+                "status": "FAILED",
+                "recordsProcessed": 0,
+                "error": "\nInvalid `prisma.seasonalityData.upsert()` invocation in\nC:\\Users\\AFF34\\Desktop\\seasonality-website\\apps\\backend\\src\\services\\csvProcessorWorker.js:169:44\n\n  166 \n  167 await prisma.$transaction(\n  168     batch.map(row =>\n→ 169         prisma.seasonalityData.upsert({\n                where: {\n                  date_tickerId: {\n                    date: new Date(\"Invalid Date\"),\n                          ~~~~~~~~~~~~~~~~~~~~~~~~\n                    tickerId: 3\n                  }\n                },\n                update: {\n                  open: 3318.05,\n                  high: 3364.8,\n                  low: 3315.6,\n                  close: 3364.1,\n                  volume: 0,\n                  openInterest: 0\n                },\n                create: {\n                  date: new Date(\"Invalid Date\"),\n                  tickerId: 3,\n                  open: 3318.05,\n                  high: 3364.8,\n                  low: 3315.6,\n                  close: 3364.1,\n                  volume: 0,\n                  openInterest: 0\n                }\n              })\n\nInvalid value for argument `date`: Provided Date object is invalid. Expected Date.",
+                "processedAt": null
+            }
+        ]
+    }
 }
