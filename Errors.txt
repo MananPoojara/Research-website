@@ -1,39 +1,9 @@
-{
-    "success": true,
-    "data": {
-        "batchId": "batch_1766554560257",
-        "status": "FAILED",
-        "progress": 100,
-        "totalFiles": 2,
-        "processedFiles": 0,
-        "failedFiles": 2,
-        "pendingFiles": 0,
-        "createdAt": "2025-12-24T05:38:45.752Z",
-        "updatedAt": "2025-12-24T05:38:50.033Z",
-        "queue": {
-            "waiting": 0,
-            "active": 0,
-            "completed": 0,
-            "failed": 8,
-            "delayed": 0
-        },
-        "files": [
-            {
-                "id": 7,
-                "fileName": "Seasonlaity.csv",
-                "status": "FAILED",
-                "recordsProcessed": 0,
-                "error": "CSV file is empty or has only header row",
-                "processedAt": null
-            },
-            {
-                "id": 8,
-                "fileName": "Seasonlaity - Copy.csv",
-                "status": "FAILED",
-                "recordsProcessed": 0,
-                "error": "CSV file is empty or has only header row",
-                "processedAt": null
-            }
-        ]
-    }
-}
+# Database configuration
+DATABASE_URL="postgresql://admin:admin123@100.114.145.101:5432/youngturtle"
+
+# Backend configuration
+BACKEND_PORT=3001
+NODE_ENV=development
+
+# Frontend configuration
+NEXT_PUBLIC_API_URL=http://localhost:3001
