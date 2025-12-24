@@ -1,1 +1,6 @@
-https://www.figma.com/design/IgocgOP8nZxlkai3Szd3bZ/AlgoTreding-UIs?node-id=0-1&p=f&t=EDm8MDdzJBpOXOvh-0
+{
+  "files": [
+    { "name": "Seasonality.csv", "size": 309513 },
+    { "name": "Seasonality - Copy.csv", "size": 275038 },
+  ]
+}
