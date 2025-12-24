@@ -1,48 +1,7 @@
-# Database configuration
-DATABASE_URL="postgresql://admin:admin123@192.168.4.30:5432/youngturtle"
-
-# Backend configuration
-BACKEND_PORT=3001
-BACKEND_HOST=192.168.4.30
-NODE_ENV=development
-
-# =====================================================
-# MINIO Configuration (S3-compatible object storage)
-# =====================================================
-MINIO_ENDPOINT=192.168.4.30
-MINIO_PORT=9000
-MINIO_API_PORT=9000
-MINIO_CONSOLE_PORT=9001
-MINIO_USE_SSL=false
-MINIO_ACCESS_KEY=admin
-MINIO_SECRET_KEY=admin12345
-
-# =====================================================
-# Redis Configuration (for BullMQ queue)
-# =====================================================
-REDIS_HOST=192.168.4.30
-REDIS_PORT=6379
-
-# =====================================================
-# Worker Configuration
-# =====================================================
-WORKER_CONCURRENCY=5
-DB_BATCH_SIZE=1000
-TEMP_DIR=/tmp/seasonality-uploads
-MAX_FILE_SIZE=10485760
-
-# JWT Secret
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
-
-
-===========================================================# Frontend environment variables
-# API URL - Points to the backend server
-# Change this to match your backend server IP/hostname
-NEXT_PUBLIC_API_URL=http://192.168.4.30:3001
-
-
-
-
-
-/////
-8f3a9b2c5d7e1f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c
+POST /api/upload/bulk/presign 200 0.809 ms - 1968
+POST /api/upload/bulk/process 200 43.573 ms - 136
+GET /api/upload/bulk/batch_1766562623415/status 200 10.394 ms - 790
+GET /api/upload/bulk/batch_1766562623415/status 304 7.723 ms - -
+GET /api/upload/bulk/batch_1766562623415/status 304 5.917 ms - -
+GET /api/upload/bulk/batch_1766562623415/status 304 6.713 ms - -
+GET /api/upload/bulk/batch_1766562623415/status 304 10.681 ms - -
