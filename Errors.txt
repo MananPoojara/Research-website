@@ -1,12 +1,39 @@
 {
-  "batchId": "batch_1700000000000",
-  "objectKeys": [
-    "uploads/batch_1700000000000/nifty.csv",
-    "uploads/batch_1700000000000/banknifty.csv",
-    "uploads/batch_1700000000000/sensex.csv"
-  ],
-  "fileNames": [
-    "Seasonlaity.csv",
-    "Seasonlaity - Copy.csv"
-  ]
+    "success": true,
+    "data": {
+        "batchId": "batch_1766554560257",
+        "status": "FAILED",
+        "progress": 100,
+        "totalFiles": 2,
+        "processedFiles": 0,
+        "failedFiles": 2,
+        "pendingFiles": 0,
+        "createdAt": "2025-12-24T05:38:45.752Z",
+        "updatedAt": "2025-12-24T05:38:50.033Z",
+        "queue": {
+            "waiting": 0,
+            "active": 0,
+            "completed": 0,
+            "failed": 8,
+            "delayed": 0
+        },
+        "files": [
+            {
+                "id": 7,
+                "fileName": "Seasonlaity.csv",
+                "status": "FAILED",
+                "recordsProcessed": 0,
+                "error": "CSV file is empty or has only header row",
+                "processedAt": null
+            },
+            {
+                "id": 8,
+                "fileName": "Seasonlaity - Copy.csv",
+                "status": "FAILED",
+                "recordsProcessed": 0,
+                "error": "CSV file is empty or has only header row",
+                "processedAt": null
+            }
+        ]
+    }
 }
