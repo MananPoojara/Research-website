@@ -1,43 +1,39 @@
 /**
- * CSV Processor Worker Service
- * Consumes jobs from BullMQ queue and processes CSV files from MinIO
- * 
- * Run this as a separate process: node src/services/csvProcessorWorker.js
+ * Upload Routes
+ * Handles CSV file uploads including bulk uploads with async processing
  */
 
-const fs = require('fs');
-const path = require('path');
-const Bull = require('bull');
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
 const { PrismaClient } = require('@prisma/client');
-const { parse } = require('csv-parse/sync');
-const { downloadToFile, deleteObject, BUCKETS } = require('../config/minio');
+const Bull = require('bull');
+const { getPresignedPutUrl, BUCKETS } = require('../config/minio');
 
 const prisma = new PrismaClient();
 
-// Configuration
-const CONCURRENCY = parseInt(process.env.WORKER_CONCURRENCY) || 5;
-const BATCH_SIZE = parseInt(process.env.DB_BATCH_SIZE) || 1000;
-const TEMP_DIR = process.env.TEMP_DIR || '/tmp/seasonality-uploads';
+// Configure multer for single file uploads
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: process.env.MAX_FILE_SIZE || 10 * 1024 * 1024, // 10MB default
+    },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'text/csv' || file.originalname.endsWith('.csv')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only CSV files are allowed'), false);
+        }
+    },
+});
 
-// Ensure temp directory exists
-if (!fs.existsSync(TEMP_DIR)) {
-    fs.mkdirSync(TEMP_DIR, { recursive: true });
-}
-
-// Create Bull queue
+// Create Bull queue for processing jobs
 const processingQueue = new Bull('csv-processing', {
     redis: {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT) || 6379,
     },
 });
-
-// Metrics tracking
-const metrics = {
-    processed: 0,
-    failed: 0,
-    startTime: Date.now(),
-};
 
 /**
  * Parse date string to valid Date object
@@ -90,352 +86,535 @@ function parseDate(dateStr) {
 }
 
 /**
- * Normalize CSV column names
- * Maps various column name formats to standard names
+ * Generate unique object key for MinIO
+ * @param {string} fileName - Original filename
+ * @param {string} batchId - Batch ID (optional)
+ * @returns {string} Object key
  */
-function normalizeColumnNames(headers) {
-    const columnMap = {
-        'date': 'date',
-        'Date': 'date',
-        'DATE': 'date',
-        'ticker': 'ticker',
-        'Ticker': 'ticker',
-        'TICKER': 'ticker',
-        'symbol': 'ticker',
-        'Symbol': 'ticker',
-        'SYMBOL': 'ticker',
-        'open': 'open',
-        'Open': 'open',
-        'OPEN': 'open',
-        'high': 'high',
-        'High': 'high',
-        'HIGH': 'high',
-        'low': 'low',
-        'Low': 'low',
-        'LOW': 'low',
-        'close': 'close',
-        'Close': 'close',
-        'CLOSE': 'close',
-        'volume': 'volume',
-        'Volume': 'volume',
-        'VOLUME': 'volume',
-        'openinterest': 'openInterest',
-        'OpenInterest': 'openInterest',
-        'OPENINTEREST': 'openInterest',
-        'open interest': 'openInterest',
-    };
-
-    return headers.map(h => columnMap[h] || h.toLowerCase().replace(/\s+/g, ''));
+function generateObjectKey(fileName, batchId = null) {
+    const timestamp = Date.now();
+    const sanitizedName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    if (batchId) {
+        return `uploads/${batchId}/${timestamp}_${sanitizedName}`;
+    }
+    return `uploads/${timestamp}_${sanitizedName}`;
 }
 
-/**
- * Process a single CSV file
- */
-async function processCSVFile(filePath, batchId, fileId) {
-    const records = [];
+// =====================================================
+// SINGLE FILE UPLOAD (Legacy - processes synchronously)
+// =====================================================
 
+// Single file upload endpoint
+router.post('/', upload.single('file'), async (req, res, next) => {
     try {
-        // Read and parse CSV file
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const parsed = parse(fileContent, {
-            columns: false,
-            skip_empty_lines: true,
-        });
-
-        if (parsed.length < 2) {
-            throw new Error('CSV file is empty or has only header row');
-        }
-
-        // Normalize column names
-        const rawHeaders = parsed[0].map(h => h.trim());
-        const headers = normalizeColumnNames(rawHeaders);
-
-        // Required columns validation
-        const requiredColumns = ['date', 'ticker', 'close'];
-        const missingColumns = requiredColumns.filter(col => !headers.includes(col));
-        if (missingColumns.length > 0) {
-            throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
-        }
-
-        // Parse data rows
-        for (let i = 1; i < parsed.length; i++) {
-            const row = parsed[i];
-            const record = {};
-
-            headers.forEach((header, index) => {
-                if (row[index] !== undefined) {
-                    record[header] = row[index].trim();
-                }
+        if (!req.file) {
+            return res.status(400).json({
+                error: 'No file uploaded',
+                message: 'Please upload a CSV file',
             });
-
-            // Skip rows with missing required fields
-            if (!record.date || !record.ticker || !record.close) {
-                continue;
-            }
-
-            records.push(record);
         }
 
-        if (records.length === 0) {
-            throw new Error('No valid data records found in CSV');
-        }
+        // Process the uploaded CSV file
+        const result = await processSingleFile(req.file);
 
-        // Get or create tickers
-        const tickerSymbols = [...new Set(records.map(r => r.ticker))];
-        const tickerResults = await Promise.all(
-            tickerSymbols.map(symbol =>
-                prisma.ticker.upsert({
-                    where: { symbol },
-                    update: {},
-                    create: { symbol },
+        res.status(200).json({
+            success: true,
+            message: 'File processed successfully',
+            data: {
+                fileName: req.file.originalname,
+                recordsProcessed: result.recordsProcessed,
+                tickersFound: result.tickersFound,
+                tickersCreated: result.tickersCreated,
+                dataEntriesCreated: result.dataEntriesCreated,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * Process single CSV file
+ * @param {Object} file - Multer file object
+ * @returns {Promise<Object>} Processing result
+ */
+async function processSingleFile(file) {
+    const csvContent = file.buffer.toString('utf-8');
+    const rows = csvContent.split('\n').filter(row => row.trim());
+    const headerRow = rows[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, ''));
+
+    const requiredColumns = ['date', 'ticker', 'close'];
+    const missingColumns = requiredColumns.filter(col => !headerRow.includes(col));
+
+    if (missingColumns.length > 0) {
+        throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
+    }
+
+    const data = [];
+    for (let i = 1; i < rows.length; i++) {
+        const values = rows[i].split(',').map(v => v.trim());
+        const row = {};
+        headerRow.forEach((header, index) => {
+            row[header] = values[index] || null;
+        });
+        data.push(row);
+    }
+
+    // Get or create tickers
+    const tickerSymbols = [...new Set(data.map(row => row.ticker))];
+    const tickerResults = await Promise.all(
+        tickerSymbols.map(symbol =>
+            prisma.ticker.upsert({
+                where: { symbol },
+                update: {},
+                create: { symbol },
+            })
+        )
+    );
+
+    const tickerMap = {};
+    tickerResults.forEach(t => {
+        tickerMap[t.symbol] = t.id;
+    });
+
+    // Batch insert data with proper date parsing
+    const seasonalityData = data.map((row, index) => {
+        try {
+            const date = parseDate(row.date);
+            
+            return {
+                date,
+                tickerId: tickerMap[row.ticker],
+                open: parseFloat(row.open) || parseFloat(row.close) || 0,
+                high: parseFloat(row.high) || parseFloat(row.close) || 0,
+                low: parseFloat(row.low) || parseFloat(row.close) || 0,
+                close: parseFloat(row.close) || 0,
+                volume: parseFloat(row.volume) || 0,
+                openInterest: parseFloat(row.openinterest) || 0,
+            };
+        } catch (error) {
+            throw new Error(`Row ${index + 2} (Ticker: ${row.ticker}): ${error.message}`);
+        }
+    });
+
+    // Insert in batches
+    const BATCH_SIZE = 1000;
+    let totalInserted = 0;
+
+    for (let i = 0; i < seasonalityData.length; i += BATCH_SIZE) {
+        const batch = seasonalityData.slice(i, i + BATCH_SIZE);
+
+        await prisma.$transaction(
+            batch.map(row =>
+                prisma.seasonalityData.upsert({
+                    where: {
+                        date_tickerId: {
+                            date: row.date,
+                            tickerId: row.tickerId,
+                        },
+                    },
+                    update: {
+                        open: row.open,
+                        high: row.high,
+                        low: row.low,
+                        close: row.close,
+                        volume: row.volume,
+                        openInterest: row.openInterest,
+                    },
+                    create: row,
                 })
             )
         );
 
-        const tickerMap = {};
-        tickerResults.forEach(t => {
-            tickerMap[t.symbol] = t.id;
-        });
-
-        // Transform data for database insertion with proper date parsing
-        const seasonalityData = records.map((row, index) => {
-            try {
-                const date = parseDate(row.date);
-                
-                return {
-                    date,
-                    tickerId: tickerMap[row.ticker],
-                    open: parseFloat(row.open) || parseFloat(row.close) || 0,
-                    high: parseFloat(row.high) || parseFloat(row.close) || 0,
-                    low: parseFloat(row.low) || parseFloat(row.close) || 0,
-                    close: parseFloat(row.close) || 0,
-                    volume: parseFloat(row.volume) || 0,
-                    openInterest: parseFloat(row.openInterest) || 0,
-                };
-            } catch (error) {
-                throw new Error(`Row ${index + 2} (Ticker: ${row.ticker}): ${error.message}`);
-            }
-        });
-
-        // Batch insert with upsert
-        let totalInserted = 0;
-        for (let i = 0; i < seasonalityData.length; i += BATCH_SIZE) {
-            const batch = seasonalityData.slice(i, i + BATCH_SIZE);
-
-            await prisma.$transaction(
-                batch.map(row =>
-                    prisma.seasonalityData.upsert({
-                        where: {
-                            date_tickerId: {
-                                date: row.date,
-                                tickerId: row.tickerId,
-                            },
-                        },
-                        update: {
-                            open: row.open,
-                            high: row.high,
-                            low: row.low,
-                            close: row.close,
-                            volume: row.volume,
-                            openInterest: row.openInterest,
-                        },
-                        create: row,
-                    })
-                )
-            );
-
-            totalInserted += batch.length;
-        }
-
-        return {
-            success: true,
-            recordsProcessed: records.length,
-            dataInserted: totalInserted,
-            tickersProcessed: tickerSymbols.length,
-        };
-
-    } catch (error) {
-        throw error;
+        totalInserted += batch.length;
     }
+
+    return {
+        recordsProcessed: data.length,
+        tickersFound: tickerSymbols.length,
+        tickersCreated: tickerResults.filter(t => t.createdAt === t.updatedAt).length,
+        dataEntriesCreated: totalInserted,
+    };
 }
 
-/**
- * Update batch and file status in database
- */
-async function updateBatchStatus(batchId, fileId, status, error = null, recordsProcessed = 0) {
-    try {
-        // Update file status
-        await prisma.uploadedFile.update({
-            where: { id: fileId },
-            data: {
-                status,
-                recordsProcessed,
-                error: error ? error.message : null,
-                processedAt: status === 'COMPLETED' ? new Date() : null,
-            },
-        });
-
-        // Get current batch status
-        const batch = await prisma.uploadBatch.findUnique({
-            where: { id: batchId },
-            include: { files: true },
-        });
-
-        if (!batch) return;
-
-        const processedCount = batch.files.filter(f => f.status === 'COMPLETED').length;
-        const failedCount = batch.files.filter(f => f.status === 'FAILED').length;
-        const pendingCount = batch.files.filter(f => f.status === 'PENDING').length;
-
-        // Determine batch status
-        let newBatchStatus = batch.status;
-        if (processedCount + failedCount === batch.totalFiles) {
-            newBatchStatus = failedCount > 0 ? (processedCount > 0 ? 'PARTIAL' : 'FAILED') : 'COMPLETED';
-        } else if (processedCount > 0 || failedCount > 0) {
-            newBatchStatus = 'PROCESSING';
-        }
-
-        // Update batch
-        await prisma.uploadBatch.update({
-            where: { id: batchId },
-            data: {
-                status: newBatchStatus,
-                processedFiles: processedCount,
-                failedFiles: failedCount,
-            },
-        });
-
-    } catch (error) {
-        console.error('Error updating batch status:', error.message);
-    }
-}
+// =====================================================
+// BULK UPLOAD (New - async processing with queue)
+// =====================================================
 
 /**
- * Process queue job
+ * Generate presigned URLs for bulk upload
+ * POST /api/upload/bulk/presign
+ * Body: { files: [{ name: string, size: number }] }
  */
-async function processJob(job) {
-    const { objectKey, batchId, fileIndex, fileName, retry } = job.data;
-    const tempFilePath = path.join(TEMP_DIR, `${Date.now()}_${fileIndex}_${fileName}`);
-
-    console.log(`[${new Date().toISOString()}] Processing file: ${fileName} (Batch: ${batchId})`);
-
+router.post('/bulk/presign', async (req, res, next) => {
     try {
-        // Update file status to PROCESSING
-        const fileRecord = await prisma.uploadedFile.findFirst({
-            where: { batchId, objectKey },
-        });
+        const { files } = req.body;
 
-        if (fileRecord) {
-            await prisma.uploadedFile.update({
-                where: { id: fileRecord.id },
-                data: { status: 'PROCESSING' },
+        if (!files || !Array.isArray(files) || files.length === 0) {
+            return res.status(400).json({
+                error: 'No files specified',
+                message: 'Please provide an array of files to upload',
             });
         }
 
-        // Download file from MinIO
-        await downloadToFile(BUCKETS.UPLOADS, objectKey, tempFilePath);
-
-        // Process CSV file
-        const result = await processCSVFile(tempFilePath, batchId, fileRecord?.id);
-
-        // Update status to COMPLETED
-        await updateBatchStatus(batchId, fileRecord?.id, 'COMPLETED', null, result.recordsProcessed);
-
-        // Clean up temp file
-        if (fs.existsSync(tempFilePath)) {
-            fs.unlinkSync(tempFilePath);
+        if (files.length > 500) {
+            return res.status(400).json({
+                error: 'Too many files',
+                message: 'Maximum 500 files per batch upload',
+            });
         }
 
-        // Delete from MinIO (move to processed)
-        try {
-            await deleteObject(BUCKETS.UPLOADS, objectKey);
-        } catch (deleteError) {
-            console.warn(`Could not delete ${objectKey} from MinIO:`, deleteError.message);
-        }
+        // Generate batch ID
+        const batchId = `batch_${Date.now()}`;
 
-        metrics.processed++;
-        console.log(`[${new Date().toISOString()}] Completed: ${fileName} - ${result.recordsProcessed} records`);
-
-        return result;
-
-    } catch (error) {
-        console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
-
-        // Update status to FAILED
-        const fileRecord = await prisma.uploadedFile.findFirst({
-            where: { batchId, objectKey },
+        // Generate presigned URLs for each file
+        const uploadUrls = files.map((file, index) => {
+            const objectKey = generateObjectKey(file.name, batchId);
+            return {
+                fileName: file.name,
+                fileSize: file.size,
+                objectKey,
+                uploadUrl: null, // Will be filled after async URL generation
+            };
         });
-        await updateBatchStatus(batchId, fileRecord?.id, 'FAILED', error);
 
-        // Clean up temp file
-        if (fs.existsSync(tempFilePath)) {
-            fs.unlinkSync(tempFilePath);
+        // Generate URLs asynchronously (can be slow for many files)
+        const urlsWithPresigned = await Promise.all(
+            uploadUrls.map(async (item) => {
+                try {
+                    const presignedUrl = await getPresignedPutUrl(
+                        BUCKETS.UPLOADS,
+                        item.objectKey,
+                        3600 // 1 hour expiry
+                    );
+                    return {
+                        ...item,
+                        uploadUrl: presignedUrl,
+                    };
+                } catch (error) {
+                    console.error(`Error generating presigned URL for ${item.fileName}:`, error.message);
+                    return {
+                        ...item,
+                        uploadUrl: null,
+                        error: 'Failed to generate upload URL',
+                    };
+                }
+            })
+        );
+
+        res.json({
+            success: true,
+            data: {
+                batchId,
+                files: urlsWithPresigned,
+                expiresIn: 3600, // 1 hour
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * Confirm upload complete and start async processing
+ * POST /api/upload/bulk/process
+ * Body: { batchId: string, objectKeys: string[] }
+ */
+router.post('/bulk/process', async (req, res, next) => {
+    try {
+        const { batchId, objectKeys, fileNames } = req.body;
+
+        if (!batchId || !objectKeys || !Array.isArray(objectKeys)) {
+            return res.status(400).json({
+                error: 'Invalid request',
+                message: 'Please provide batchId and objectKeys array',
+            });
         }
 
-        metrics.failed++;
-        throw error;
-    }
-}
+        // Check if batch already exists
+        const existingBatch = await prisma.uploadBatch.findUnique({
+            where: { id: batchId },
+        });
 
-// Configure worker
-processingQueue.process(CONCURRENCY, async (job) => {
-    return await processJob(job);
-});
+        if (existingBatch) {
+            return res.status(400).json({
+                error: 'Batch already exists',
+                message: `Batch ${batchId} has already been submitted`,
+            });
+        }
 
-// Event handlers
-processingQueue.on('completed', (job, result) => {
-    console.log(`[COMPLETED] Job ${job.id}: ${result?.recordsProcessed || 0} records`);
-});
+        // Create batch record
+        const batch = await prisma.uploadBatch.create({
+            data: {
+                id: batchId,
+                status: 'PENDING',
+                totalFiles: objectKeys.length,
+                processedFiles: 0,
+                failedFiles: 0,
+                files: {
+                    create: objectKeys.map((key, index) => ({
+                        objectKey: key,
+                        fileName: fileNames?.[index] || key.split('/').pop(),
+                        status: 'PENDING',
+                    })),
+                },
+            },
+        });
 
-processingQueue.on('failed', (job, error) => {
-    console.error(`[FAILED] Job ${job.id}:`, error.message);
-});
+        // Add all files to processing queue
+        await Promise.all(
+            objectKeys.map((objectKey, index) =>
+                processingQueue.add(
+                    {
+                        objectKey,
+                        batchId,
+                        fileIndex: index,
+                        fileName: fileNames?.[index] || objectKey.split('/').pop(),
+                        priority: 10 - Math.min(index, 10), // Earlier files higher priority
+                    },
+                    {
+                        priority: 10 - Math.min(index, 10),
+                        attempts: 3,
+                        backoff: { type: 'exponential', delay: 1000 },
+                    }
+                )
+            )
+        );
 
-processingQueue.on('error', (error) => {
-    console.error('[QUEUE ERROR]', error.message);
-});
-
-processingQueue.on('stalled', (job) => {
-    console.warn(`[STALLED] Job ${job.id} - may need manual intervention`);
-});
-
-// Progress logging
-setInterval(() => {
-    const elapsed = (Date.now() - metrics.startTime) / 1000;
-    const rate = elapsed > 0 ? (metrics.processed / elapsed).toFixed(2) : 0;
-
-    console.log(`[STATS] Processed: ${metrics.processed}, Failed: ${metrics.failed}, Rate: ${rate}/sec`);
-}, 60000); // Log every minute
-
-// Graceful shutdown
-async function shutdown() {
-    console.log('Shutting down worker gracefully...');
-
-    try {
-        // Close queue connection
-        await processingQueue.close();
-        console.log('Queue connection closed');
-
-        // Close database connection
-        await prisma.$disconnect();
-        console.log('Database connection closed');
-
-        process.exit(0);
+        res.json({
+            success: true,
+            data: {
+                batchId,
+                status: 'PROCESSING',
+                totalFiles: objectKeys.length,
+                message: `${objectKeys.length} files queued for processing`,
+            },
+        });
     } catch (error) {
-        console.error('Error during shutdown:', error.message);
-        process.exit(1);
+        next(error);
     }
-}
+});
 
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
+/**
+ * Get batch processing status
+ * GET /api/upload/bulk/:batchId/status
+ */
+router.get('/bulk/:batchId/status', async (req, res, next) => {
+    try {
+        const { batchId } = req.params;
 
-// Start worker
-console.log(`========================================`);
-console.log(`CSV Processor Worker Started`);
-console.log(`Concurrency: ${CONCURRENCY}`);
-console.log(`Batch Size: ${BATCH_SIZE}`);
-console.log(`Queue: csv-processing`);
-console.log(`========================================`);
+        const batch = await prisma.uploadBatch.findUnique({
+            where: { id: batchId },
+            include: {
+                files: {
+                    select: {
+                        id: true,
+                        fileName: true,
+                        status: true,
+                        recordsProcessed: true,
+                        error: true,
+                        processedAt: true,
+                    },
+                    orderBy: { id: 'asc' },
+                },
+            },
+        });
 
-module.exports = { processingQueue, processJob };
+        if (!batch) {
+            return res.status(404).json({
+                error: 'Batch not found',
+                message: `No batch found with ID ${batchId}`,
+            });
+        }
+
+        // Get queue status
+        const queueStatus = await processingQueue.getJobCounts();
+
+        // Calculate progress
+        const progress = batch.totalFiles > 0
+            ? ((batch.processedFiles + batch.failedFiles) / batch.totalFiles) * 100
+            : 0;
+
+        res.json({
+            success: true,
+            data: {
+                batchId: batch.id,
+                status: batch.status,
+                progress: Math.round(progress * 100) / 100,
+                totalFiles: batch.totalFiles,
+                processedFiles: batch.processedFiles,
+                failedFiles: batch.failedFiles,
+                pendingFiles: batch.totalFiles - batch.processedFiles - batch.failedFiles,
+                createdAt: batch.createdAt,
+                updatedAt: batch.updatedAt,
+                queue: {
+                    waiting: queueStatus.waiting,
+                    active: queueStatus.active,
+                    completed: queueStatus.completed,
+                    failed: queueStatus.failed,
+                    delayed: queueStatus.delayed,
+                },
+                files: batch.files.map(f => ({
+                    ...f,
+                    status: f.status,
+                })),
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * List all batches
+ * GET /api/upload/bulk
+ */
+router.get('/bulk', async (req, res, next) => {
+    try {
+        const { status, limit = 20, offset = 0 } = req.query;
+
+        const where = {};
+        if (status) {
+            where.status = status;
+        }
+
+        const batches = await prisma.uploadBatch.findMany({
+            where,
+            orderBy: { createdAt: 'desc' },
+            take: parseInt(limit),
+            skip: parseInt(offset),
+            include: {
+                _count: {
+                    select: { files: true },
+                },
+            },
+        });
+
+        const total = await prisma.uploadBatch.count({ where });
+
+        res.json({
+            success: true,
+            data: {
+                batches: batches.map(b => ({
+                    batchId: b.id,
+                    status: b.status,
+                    totalFiles: b.totalFiles,
+                    processedFiles: b.processedFiles,
+                    failedFiles: b.failedFiles,
+                    progress: b.totalFiles > 0
+                        ? Math.round(((b.processedFiles + b.failedFiles) / b.totalFiles) * 10000) / 100
+                        : 0,
+                    createdAt: b.createdAt,
+                    updatedAt: b.updatedAt,
+                })),
+                pagination: {
+                    total,
+                    limit: parseInt(limit),
+                    offset: parseInt(offset),
+                },
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * Retry failed files in a batch
+ * POST /api/upload/bulk/:batchId/retry
+ */
+router.post('/bulk/:batchId/retry', async (req, res, next) => {
+    try {
+        const { batchId } = req.params;
+
+        const batch = await prisma.uploadBatch.findUnique({
+            where: { id: batchId },
+            include: {
+                files: {
+                    where: { status: 'FAILED' },
+                },
+            },
+        });
+
+        if (!batch) {
+            return res.status(404).json({
+                error: 'Batch not found',
+                message: `No batch found with ID ${batchId}`,
+            });
+        }
+
+        const failedFiles = batch.files;
+        if (failedFiles.length === 0) {
+            return res.status(400).json({
+                error: 'No failed files',
+                message: 'There are no failed files to retry in this batch',
+            });
+        }
+
+        // Update batch status
+        await prisma.uploadBatch.update({
+            where: { id: batchId },
+            data: {
+                status: 'PROCESSING',
+                failedFiles: 0, // Reset failed count
+            },
+        });
+
+        // Reset file statuses
+        await prisma.uploadedFile.updateMany({
+            where: { batchId, status: 'FAILED' },
+            data: {
+                status: 'PENDING',
+                error: null,
+                processedAt: null,
+            },
+        });
+
+        // Re-add failed files to queue
+        await Promise.all(
+            failedFiles.map(file =>
+                processingQueue.add(
+                    {
+                        objectKey: file.objectKey,
+                        batchId,
+                        fileName: file.fileName,
+                        retry: true,
+                    },
+                    {
+                        priority: 1, // High priority for retries
+                        attempts: 3,
+                        backoff: { type: 'exponential', delay: 2000 },
+                    }
+                )
+            )
+        );
+
+        res.json({
+            success: true,
+            data: {
+                batchId,
+                status: 'PROCESSING',
+                filesRetried: failedFiles.length,
+                message: `${failedFiles.length} failed files queued for retry`,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Health check for upload service
+router.get('/health', (req, res) => {
+    res.json({
+        status: 'healthy',
+        service: 'upload-service',
+        maxFileSize: process.env.MAX_FILE_SIZE || '10MB',
+        features: {
+            singleUpload: true,
+            bulkUpload: true,
+            asyncProcessing: true,
+        },
+    });
+});
+
+module.exports = router;
