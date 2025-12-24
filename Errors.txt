@@ -1,9 +1,35 @@
 # Database configuration
-DATABASE_URL="postgresql://admin:admin123@100.114.145.101:5432/youngturtle"
+DATABASE_URL="postgresql://admin:admin123@192.168.4.30:5432/youngturtle"
 
 # Backend configuration
 BACKEND_PORT=3001
+BACKEND_HOST=192.168.4.30
 NODE_ENV=development
 
-# Frontend configuration
-NEXT_PUBLIC_API_URL=http://localhost:3001
+# =====================================================
+# MINIO Configuration (S3-compatible object storage)
+# =====================================================
+MINIO_ENDPOINT=192.168.4.30
+MINIO_PORT=9000
+MINIO_API_PORT=9000
+MINIO_CONSOLE_PORT=9001
+MINIO_USE_SSL=false
+MINIO_ACCESS_KEY=admin
+MINIO_SECRET_KEY=admin12345
+
+# =====================================================
+# Redis Configuration (for BullMQ queue)
+# =====================================================
+REDIS_HOST=192.168.4.30
+REDIS_PORT=6379
+
+# =====================================================
+# Worker Configuration
+# =====================================================
+WORKER_CONCURRENCY=5
+DB_BATCH_SIZE=1000
+TEMP_DIR=/tmp/seasonality-uploads
+MAX_FILE_SIZE=10485760
+
+# JWT Secret
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
