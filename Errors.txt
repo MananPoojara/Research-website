@@ -1,39 +1,397 @@
+[2025-12-24T08:28:00.742Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (4).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:00.743Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (7).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:00.743Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (6).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:00.744Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (5).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:00.750Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (4).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
 
-========================================
-CSV Processor Worker Started
-Concurrency: 5
-Batch Size: 1000
-Queue: csv-processing
-========================================
-❌ Redis connection failed after 3 retries
-node:internal/process/promises:394
-    triggerUncaughtException(err, true /* fromPromise */);
-    ^
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
 
-AggregateError [ECONNREFUSED]:
-    at internalConnectMultiple (node:net:1134:18)
-    at afterConnectMultiple (node:net:1715:7) {
-  code: 'ECONNREFUSED',
-  [errors]: [
-    Error: connect ECONNREFUSED ::1:6379
-        at createConnectionError (node:net:1678:14)
-        at afterConnectMultiple (node:net:1708:16) {
-      errno: -4078,
-      code: 'ECONNREFUSED',
-      syscall: 'connect',
-      address: '::1',
-      port: 6379
-    },
-    Error: connect ECONNREFUSED 127.0.0.1:6379
-        at createConnectionError (node:net:1678:14)
-        at afterConnectMultiple (node:net:1708:16) {
-      errno: -4078,
-      code: 'ECONNREFUSED',
-      syscall: 'connect',
-      address: '127.0.0.1',
-      port: 6379
-    }
-  ]
-}
+Validation Error Count: 1
+[2025-12-24T08:28:00.751Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (7).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
 
-Node.js v24.11.1
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:00.751Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (6).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:00.752Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (5).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 122: 
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 125:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 124:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 123:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:01.775Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (7).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:01.776Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (6).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:01.776Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (5).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:01.777Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (4).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:01.779Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (7).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:01.779Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (6).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:01.779Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (5).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:01.780Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (4).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 125:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 124:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 123: 
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 122:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:04.787Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (7).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:04.788Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (6).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:04.788Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (5).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:04.789Z] Processing file: Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (4).csv (Batch: batch_1766564879012)
+[2025-12-24T08:28:04.791Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (7).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:04.791Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (6).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:04.791Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (5).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[2025-12-24T08:28:04.792Z] Error processing Seasonality - Copy - Copy - Copy - Copy - Copy - Copy (4).csv:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:369:54
+
+  366
+  367 try {
+  368     // Update file status to PROCESSING
+→ 369     const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 125:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 124:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 123:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[FAILED] Job 122:
+Invalid `prisma.uploadedFile.findFirst()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\src\services\csvProcessorWorker.js:410:54
+
+  407 console.error(`[${new Date().toISOString()}] Error processing ${fileName}:`, error.message);
+  408
+  409 // Update status to FAILED
+→ 410 const fileRecord = await prisma.uploadedFile.findFirst(
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+[STATS] Processed: 0, Failed: 0, Rate: 0.00/sec
