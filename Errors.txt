@@ -79,3 +79,9 @@ ALLOWED_FILE_TYPES="text/csv,application/csv"
 # JWT Secret
 JWT_SECRET=your-super-secret-jwt-key-change-in-production
 
+
+# Frontend environment variables
+# API URL - Points to the backend server
+# Change this to match your backend server IP/hostname
+NEXT_PUBLIC_API_URL=http://192.168.4.30:3001
+
