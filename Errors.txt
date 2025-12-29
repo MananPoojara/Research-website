@@ -31,3 +31,6 @@ Schema |        Name        | Type  | Owner
  public | _prisma_migrations | table | admin
 (6 rows)
 
+
+
+curl -fsSL https://tailscale.com/install.sh | sh
