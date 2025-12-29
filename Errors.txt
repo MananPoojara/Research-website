@@ -34,3 +34,6 @@ Schema |        Name        | Type  | Owner
 
 
 curl -fsSL https://tailscale.com/install.sh | sh
+
+
+https://login.tailscale.com/admin/machines
