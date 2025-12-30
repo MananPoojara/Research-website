@@ -85,3 +85,10 @@ JWT_SECRET=your-super-secret-jwt-key-change-in-production
 # Change this to match your backend server IP/hostname
 NEXT_PUBLIC_API_URL=http://192.168.4.30:3001
 
+
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Error: 
+EPERM: operation not permitted, rename 'C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\.prisma\client\query_engine-windows.dll.node.tmp11616' -> 'C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\.prisma\client\query_engine-windows.dll.node'
+
