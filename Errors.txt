@@ -3,6 +3,9 @@
 464-14a4a9243b7bb404.js:1 
  PUT http://minio:9000/seasonality-uploads/uploads/batch_1767340626659/176734062…Signature=a0c7c83… net::ERR_NAME_NOT_RESOLVED
 
+Request URL
+http://minio:9000/seasonality-uploads/uploads/batch_1767341394241/1767341394241_Seasonality_-_Copy_-_Copy_-_Copy_-_Copy_-_Copy_-_Copy__4_.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=admin%2F20260102%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260102T080954Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=94ac82a7c656f357139ba9a92e9e59910de91330dd402737fc9604f6cf2a5702
+
 
 FROM node:18
 
