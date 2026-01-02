@@ -165,8 +165,19 @@ Prisma schema loaded from prisma\schema.prisma
 Error: 
 EPERM: operation not permitted, rename 'C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\.prisma\client\query_engine-windows.dll.node.tmp11616' -> 'C:\Users\AFF34\Desktop\seasonality-website\apps\backend\node_modules\.prisma\client\query_engine-windows.dll.node'
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+464-14a4a9243b7bb404.js:1 
+ GET http://192.168.4.30:3001/api/data/tickers 500 (Internal Server Error)
 
-
+117-684038a90405b488.js:1 Error fetching ticker data: 
+Z {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+117-684038a90405b488.js:1 Error fetching stats: 
+Z {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
+464-14a4a9243b7bb404.js:1 
+ GET http://localhost:3001/api/data/tickers net::ERR_CONNECTION_REFUSED
+464-14a4a9243b7bb404.js:1 
+ GET http://localhost:3001/api/data/aggregate?date=2026-01-02 net::ERR_CONNECTION_REFUSED
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
