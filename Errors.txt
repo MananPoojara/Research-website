@@ -1,3 +1,9 @@
+
+﻿
+464-14a4a9243b7bb404.js:1 
+ PUT http://minio:9000/seasonality-uploads/uploads/batch_1767340626659/176734062…Signature=a0c7c83… net::ERR_NAME_NOT_RESOLVED
+
+
 FROM node:18
 
 WORKDIR /app
