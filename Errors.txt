@@ -32,6 +32,45 @@ DOCKERFILE FRONTEND
 
 
 
+backend:
+  build: ../apps/backend
+  container_name: yt-backend
+  ports:
+    - "3001:3001"
+  env_file:
+    - ../apps/backend/.env
+  depends_on:
+    - postgres
+    - redis
+    - minio
+  restart: unless-stopped
+
+
+
+worker:
+  build: ../apps/backend
+  container_name: yt-worker
+  command: ["npm", "run", "worker"]
+  env_file:
+    - ../apps/backend/.env
+  depends_on:
+    - postgres
+    - redis
+  restart: unless-stopped
+
+
+frontend:
+  build: ../apps/frontend
+  container_name: yt-frontend
+  ports:
+    - "3000:3000"
+  depends_on:
+    - backend
+  restart: unless-stopped
+
+
+updated docker-compose.yml
+
 id |     symbol     |        createdAt        |        updatedAt        
 ----+----------------+-------------------------+-------------------------
  23 | BSE            | 2025-12-24 08:01:44.045 | 2025-12-24 08:01:44.045
