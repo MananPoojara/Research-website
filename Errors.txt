@@ -838,3 +838,26 @@ CONTAINER ID   IMAGE                               COMMAND                  CREA
 26288ad1f431   minio/minio                         "/usr/bin/docker-ent…"   18 hours ago   Up 2 hours                        0.0.0.0:9000-9001->9000-9001/tcp, [::]:9000-9001->9000-9001/tcp                yt-minio
 10c4c4a229f0   timescale/timescaledb:2.15.1-pg16   "docker-entrypoint.s…"   18 hours ago   Up 2 hours                        0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp                                    yt-postgres
 server@ubuntu-server:~
+
+
+
+
+============================================================
+MIGRATION SUMMARY
+============================================================
+Symbols processed: 216/217
+Total records migrated: 11,18,071
+Execution time: 45m 13s
+Average speed: 412 records/second
+
+Errors (1):
+  • BEL: Failed to process batch 1 for BEL:
+Invalid `tx.seasonalityData.upsert()` invocation in
+C:\Users\AFF34\Desktop\seasonality-website\apps\backend\scripts\migrate-old-symbols.js:274:44
+
+  271 // Use transaction for each batch with increased timeout
+  272 await prisma.$transaction(async (tx) => {
+  273     const upsertPromises = batch.map(record =>
+→ 274         tx.seasonalityData.upsert(
+Transaction API error: Transaction already closed: A batch query cannot be executed on an expired transaction. The timeout for this transaction was 30000 ms, however 2372808 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.
+
