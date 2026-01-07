@@ -1266,3 +1266,70 @@ C:\Users\AFF34\Desktop\seasonality-website\apps\backend\scripts\migrate-old-symb
 → 274         tx.seasonalityData.upsert(
 Transaction API error: Transaction already closed: A batch query cannot be executed on an expired transaction. The timeout for this transaction was 30000 ms, however 2372808 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.
 
+
+
+
+
+
+
+//////////////////////////////////gitignore////////////////////////////////////////////
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Next.js
+.next/
+.out/
+.next/cache/
+
+# Prisma
+packages/prisma/node_modules/
+packages/prisma/.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+build/
+*.tgz
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+jspm_packages/
+
+# Typescript
+*.tsbuildinfo
+*.js.map
+
+# Coverage
+coverage/
+
+# MinIO data (if local)
+minio-data/
+
+# Docker
+Dockerfile
+.dockerignore
