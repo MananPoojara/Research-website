@@ -1330,6 +1330,20 @@ coverage/
 # MinIO data (if local)
 minio-data/
 
+
+
+
+
+
+
+////////////////////
+CSV validation failed with 51 error(s). First errors: Row 2: Invalid date format "09-Jan-26" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 3: Invalid date format "08-Jan-26" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 4: Invalid date format "07-Jan-26" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 5: Invalid date format "06-Jan-26" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 6: Invalid date format "05-Jan-26" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 7: Invalid date format "02-Jan-26" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 8: Invalid date format "01-Jan-26" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 9: Invalid date format "31-Dec-25" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 10: Invalid date format "30-Dec-25" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD); Row 11: Invalid date format "29-Dec-25" (expected: DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD) ... and 41 more errors
+
+
+
+Reduce redundancy and solve the error.
+You have only one attempt
+
 # Docker
 Dockerfile
 .dockerignore
