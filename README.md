@@ -92,6 +92,20 @@ def getExpiryWeeklyData(row):
     return expiryWeeklyData
 
 
+def safe_boolean(value):
+    """Convert value to boolean, preserving NaN"""
+    if pd.isna(value):
+        return np.nan
+    return bool(value > 0)
+
+
+def safe_even_check(value):
+    """Check if value is even, preserving NaN"""
+    if pd.isna(value):
+        return np.nan
+    return bool((value % 2) == 0)
+
+
 def generateFiles(symbolDailyData, fileStorePath):
 
     global symbolMondayWeeklyData
@@ -106,7 +120,7 @@ def generateFiles(symbolDailyData, fileStorePath):
     symbolDailyData = symbolDailyData.set_index('Date').sort_index(ascending=True)
     print('Done')
 
-    # ===== FIXED: Convert daily to weekly timeframe using groupby instead of resample =====
+    # Convert daily to weekly timeframe using groupby instead of resample
     print('Convert daily to weekly timeframe from monday as start of week')
     
     # Calculate Monday date for each record
@@ -130,7 +144,7 @@ def generateFiles(symbolDailyData, fileStorePath):
     symbolMondayWeeklyData = symbolMondayWeeklyData.set_index('Date').sort_index(ascending=True)
     print('Done')
 
-    # ===== FIXED: Convert daily to weekly timeframe (Expiry week - Thursday) using groupby =====
+    # Convert daily to weekly timeframe (Expiry week - Thursday) using groupby
     print('Convert daily to weekly timeframe from expiry week and thursday as end of week')
     
     symbolDailyData_temp = symbolDailyData.reset_index()
@@ -189,23 +203,23 @@ def generateFiles(symbolDailyData, fileStorePath):
 
     # generate new fields of yearly data
     print('Generate new fields of yearly data')
-    symbolYearlyData['EvenYear'] = ((symbolYearlyData['Date'].dt.year % 2) == 0)
+    symbolYearlyData['EvenYear'] = symbolYearlyData['Date'].dt.year.apply(safe_even_check)
     symbolYearlyData['ReturnPoints'] = symbolYearlyData['Close'] - symbolYearlyData['Close'].shift(1)
     symbolYearlyData['ReturnPercentage'] = round((symbolYearlyData['ReturnPoints'] / symbolYearlyData['Close'].shift(1)*100), 2)
-    symbolYearlyData['PositiveYear'] = (symbolYearlyData['ReturnPoints'] > 0)
+    symbolYearlyData['PositiveYear'] = symbolYearlyData['ReturnPoints'].apply(safe_boolean)
     print('Done')
 
     # generate new fields of monthly data
     print('Generate new fields of monthly data')
-    symbolMonthlyData['EvenMonth'] = ((symbolMonthlyData['Date'].dt.month % 2) == 0)
+    symbolMonthlyData['EvenMonth'] = symbolMonthlyData['Date'].dt.month.apply(safe_even_check)
     symbolMonthlyData['ReturnPoints'] = symbolMonthlyData['Close'] - symbolMonthlyData['Close'].shift(1)
     symbolMonthlyData['ReturnPercentage'] = round((symbolMonthlyData['ReturnPoints'] / symbolMonthlyData['Close'].shift(1)*100), 2)
-    symbolMonthlyData['PositiveMonth'] = (symbolMonthlyData['ReturnPoints'] > 0)
+    symbolMonthlyData['PositiveMonth'] = symbolMonthlyData['ReturnPoints'].apply(safe_boolean)
 
     yearlyReturns = np.array(symbolMonthlyData.apply(lambda row: getYearlyReturns(row), axis=1).tolist()).transpose()
-    symbolMonthlyData['EvenYear'] = ((symbolMonthlyData['Date'].dt.year % 2) == 0)
+    symbolMonthlyData['EvenYear'] = symbolMonthlyData['Date'].dt.year.apply(safe_even_check)
     symbolMonthlyData['YearlyReturnPoints'], symbolMonthlyData['YearlyReturnPercentage'] = yearlyReturns[0], yearlyReturns[1]
-    symbolMonthlyData['PositiveYear'] = (symbolMonthlyData['YearlyReturnPoints'] > 0)
+    symbolMonthlyData['PositiveYear'] = symbolMonthlyData['YearlyReturnPoints'].apply(safe_boolean)
     print('Done')
 
     # generate new fields of monday weekly data
@@ -222,25 +236,25 @@ def generateFiles(symbolDailyData, fileStorePath):
         else:
             symbolMondayWeeklyData.loc[i, 'WeekNumberYearly'] = symbolMondayWeeklyData.loc[i-1, 'WeekNumberYearly'] + 1
 
-    symbolMondayWeeklyData['EvenWeekNumberMonthly'] = ((symbolMondayWeeklyData['WeekNumberMonthly'] % 2) == 0)
-    symbolMondayWeeklyData['EvenWeekNumberYearly'] = ((symbolMondayWeeklyData['WeekNumberYearly'] % 2) == 0)
+    symbolMondayWeeklyData['EvenWeekNumberMonthly'] = symbolMondayWeeklyData['WeekNumberMonthly'].apply(safe_even_check)
+    symbolMondayWeeklyData['EvenWeekNumberYearly'] = symbolMondayWeeklyData['WeekNumberYearly'].apply(safe_even_check)
     symbolMondayWeeklyData[['WeekNumberMonthly', 'WeekNumberYearly']] = symbolMondayWeeklyData[
         ['WeekNumberMonthly', 'WeekNumberYearly']
     ].fillna(value=0).astype('Int64').replace(0, np.nan)
 
     symbolMondayWeeklyData['ReturnPoints'] = symbolMondayWeeklyData['Close'] - symbolMondayWeeklyData['Close'].shift(1)
     symbolMondayWeeklyData['ReturnPercentage'] = round((symbolMondayWeeklyData['ReturnPoints'] / symbolMondayWeeklyData['Close'].shift(1)*100), 2)
-    symbolMondayWeeklyData['PositiveWeek'] = (symbolMondayWeeklyData['ReturnPoints'] > 0)
+    symbolMondayWeeklyData['PositiveWeek'] = symbolMondayWeeklyData['ReturnPoints'].apply(safe_boolean)
 
     monthlyReturns = np.array(symbolMondayWeeklyData.apply(lambda row: getMonthlyReturns(row), axis=1).tolist()).transpose()
-    symbolMondayWeeklyData['EvenMonth'] = ((symbolMondayWeeklyData['Date'].dt.month % 2) == 0)
+    symbolMondayWeeklyData['EvenMonth'] = symbolMondayWeeklyData['Date'].dt.month.apply(safe_even_check)
     symbolMondayWeeklyData['MonthlyReturnPoints'], symbolMondayWeeklyData['MonthlyReturnPercentage'] = monthlyReturns[0], monthlyReturns[1]
-    symbolMondayWeeklyData['PositiveMonth'] = (symbolMondayWeeklyData['MonthlyReturnPoints'] > 0)
+    symbolMondayWeeklyData['PositiveMonth'] = symbolMondayWeeklyData['MonthlyReturnPoints'].apply(safe_boolean)
 
     yearlyReturns = np.array(symbolMondayWeeklyData.apply(lambda row: getYearlyReturns(row), axis=1).tolist()).transpose()
-    symbolMondayWeeklyData['EvenYear'] = ((symbolMondayWeeklyData['Date'].dt.year % 2) == 0)
+    symbolMondayWeeklyData['EvenYear'] = symbolMondayWeeklyData['Date'].dt.year.apply(safe_even_check)
     symbolMondayWeeklyData['YearlyReturnPoints'], symbolMondayWeeklyData['YearlyReturnPercentage'] = yearlyReturns[0], yearlyReturns[1]
-    symbolMondayWeeklyData['PositiveYear'] = (symbolMondayWeeklyData['YearlyReturnPoints'] > 0)
+    symbolMondayWeeklyData['PositiveYear'] = symbolMondayWeeklyData['YearlyReturnPoints'].apply(safe_boolean)
     print('Done')
 
     # generate new fields of expiry weekly data
@@ -257,25 +271,25 @@ def generateFiles(symbolDailyData, fileStorePath):
         else:
             symbolExpiryWeeklyData.loc[i, 'WeekNumberYearly'] = symbolExpiryWeeklyData.loc[i-1, 'WeekNumberYearly'] + 1
 
-    symbolExpiryWeeklyData['EvenWeekNumberMonthly'] = ((symbolExpiryWeeklyData['WeekNumberMonthly'] % 2) == 0)
-    symbolExpiryWeeklyData['EvenWeekNumberYearly'] = ((symbolExpiryWeeklyData['WeekNumberYearly'] % 2) == 0)
+    symbolExpiryWeeklyData['EvenWeekNumberMonthly'] = symbolExpiryWeeklyData['WeekNumberMonthly'].apply(safe_even_check)
+    symbolExpiryWeeklyData['EvenWeekNumberYearly'] = symbolExpiryWeeklyData['WeekNumberYearly'].apply(safe_even_check)
     symbolExpiryWeeklyData[['WeekNumberMonthly', 'WeekNumberYearly']] = symbolExpiryWeeklyData[
         ['WeekNumberMonthly', 'WeekNumberYearly']
     ].fillna(value=0).astype('Int64').replace(0, np.nan)
 
     symbolExpiryWeeklyData['ReturnPoints'] = symbolExpiryWeeklyData['Close'] - symbolExpiryWeeklyData['Close'].shift(1)
     symbolExpiryWeeklyData['ReturnPercentage'] = round((symbolExpiryWeeklyData['ReturnPoints']/symbolExpiryWeeklyData['Close'].shift(1)*100), 2)
-    symbolExpiryWeeklyData['PositiveWeek'] = (symbolExpiryWeeklyData['ReturnPoints'] > 0)
+    symbolExpiryWeeklyData['PositiveWeek'] = symbolExpiryWeeklyData['ReturnPoints'].apply(safe_boolean)
 
     monthlyReturns = np.array(symbolExpiryWeeklyData.apply(lambda row: getMonthlyReturns(row), axis=1).tolist()).transpose()
-    symbolExpiryWeeklyData['EvenMonth'] = ((symbolExpiryWeeklyData['Date'].dt.month % 2) == 0)
+    symbolExpiryWeeklyData['EvenMonth'] = symbolExpiryWeeklyData['Date'].dt.month.apply(safe_even_check)
     symbolExpiryWeeklyData['MonthlyReturnPoints'], symbolExpiryWeeklyData['MonthlyReturnPercentage'] = monthlyReturns[0], monthlyReturns[1]
-    symbolExpiryWeeklyData['PositiveMonth'] = (symbolExpiryWeeklyData['MonthlyReturnPoints'] > 0)
+    symbolExpiryWeeklyData['PositiveMonth'] = symbolExpiryWeeklyData['MonthlyReturnPoints'].apply(safe_boolean)
 
     yearlyReturns = np.array(symbolExpiryWeeklyData.apply(lambda row: getYearlyReturns(row), axis=1).tolist()).transpose()
-    symbolExpiryWeeklyData['EvenYear'] = ((symbolExpiryWeeklyData['Date'].dt.year % 2) == 0)
+    symbolExpiryWeeklyData['EvenYear'] = symbolExpiryWeeklyData['Date'].dt.year.apply(safe_even_check)
     symbolExpiryWeeklyData['YearlyReturnPoints'], symbolExpiryWeeklyData['YearlyReturnPercentage'] = yearlyReturns[0], yearlyReturns[1]
-    symbolExpiryWeeklyData['PositiveYear'] = (symbolExpiryWeeklyData['YearlyReturnPoints'] > 0)
+    symbolExpiryWeeklyData['PositiveYear'] = symbolExpiryWeeklyData['YearlyReturnPoints'].apply(safe_boolean)
     print('Done')
 
     # generate new fields of daily data
@@ -294,10 +308,10 @@ def generateFiles(symbolDailyData, fileStorePath):
         else:
             symbolDailyData.loc[i, 'TradingYearDay'] = symbolDailyData.loc[i - 1, 'TradingYearDay'] + 1
 
-    symbolDailyData['EvenCalenderMonthDay'] = ((symbolDailyData['CalenderMonthDay'] % 2) == 0)
-    symbolDailyData['EvenCalenderYearDay'] = ((symbolDailyData['CalenderYearDay'] % 2) == 0)
-    symbolDailyData['EvenTradingMonthDay'] = ((symbolDailyData['TradingMonthDay'] % 2) == 0)
-    symbolDailyData['EvenTradingYearDay'] = ((symbolDailyData['TradingYearDay'] % 2) == 0)
+    symbolDailyData['EvenCalenderMonthDay'] = symbolDailyData['CalenderMonthDay'].apply(safe_even_check)
+    symbolDailyData['EvenCalenderYearDay'] = symbolDailyData['CalenderYearDay'].apply(safe_even_check)
+    symbolDailyData['EvenTradingMonthDay'] = symbolDailyData['TradingMonthDay'].apply(safe_even_check)
+    symbolDailyData['EvenTradingYearDay'] = symbolDailyData['TradingYearDay'].apply(safe_even_check)
 
     symbolDailyData[['TradingMonthDay', 'TradingYearDay']] = symbolDailyData[
         ['TradingMonthDay', 'TradingYearDay']
@@ -305,21 +319,20 @@ def generateFiles(symbolDailyData, fileStorePath):
 
     symbolDailyData['ReturnPoints'] = symbolDailyData['Close'] - symbolDailyData['Close'].shift(1)
     symbolDailyData['ReturnPercentage'] = round((symbolDailyData['ReturnPoints'] / symbolDailyData['Close'].shift(1)*100), 2)
-    symbolDailyData['PositiveDay'] = (symbolDailyData['ReturnPoints'] > 0)
+    symbolDailyData['PositiveDay'] = symbolDailyData['ReturnPoints'].apply(safe_boolean)
 
     # weekly monday calculations
     symbolDailyData['MondayWeeklyDate'] = symbolDailyData['Date'].apply(lambda x: x - pd.tseries.frequencies.to_offset(str(x.weekday()) + 'D'))
     mondayWeeklyData = np.array(symbolDailyData.apply(lambda row: getMondayWeeklyData(row), axis=1).tolist()).transpose()
 
     symbolDailyData['MondayWeekNumberMonthly'] = symbolDailyData['MondayWeekNumberYearly'] = np.nan
-    symbolDailyData['MondayWeekNumberMonthly'], symbolDailyData['MondayWeekNumberYearly'], \
-        symbolDailyData['EvenMondayWeekNumberMonthly'], symbolDailyData['EvenMondayWeekNumberYearly'], \
-        symbolDailyData['MondayWeeklyReturnPoints'], symbolDailyData['MondayWeeklyReturnPercentage'], \
-        symbolDailyData['PositiveMondayWeek'] = \
-        mondayWeeklyData[2], mondayWeeklyData[3], \
-        ([((i % 2) == 0) for i in mondayWeeklyData[2]]), ([((i % 2) == 0) for i in mondayWeeklyData[3]]), \
-        mondayWeeklyData[0], mondayWeeklyData[1], \
-        ([(i > 0) for i in mondayWeeklyData[0]])
+    symbolDailyData['MondayWeekNumberMonthly'] = mondayWeeklyData[2]
+    symbolDailyData['MondayWeekNumberYearly'] = mondayWeeklyData[3]
+    symbolDailyData['EvenMondayWeekNumberMonthly'] = pd.Series(mondayWeeklyData[2]).apply(safe_even_check)
+    symbolDailyData['EvenMondayWeekNumberYearly'] = pd.Series(mondayWeeklyData[3]).apply(safe_even_check)
+    symbolDailyData['MondayWeeklyReturnPoints'] = mondayWeeklyData[0]
+    symbolDailyData['MondayWeeklyReturnPercentage'] = mondayWeeklyData[1]
+    symbolDailyData['PositiveMondayWeek'] = pd.Series(mondayWeeklyData[0]).apply(safe_boolean)
 
     # weekly expiry calculations
     symbolDailyData['ExpiryWeeklyDate'] = symbolDailyData['Date'].apply(
@@ -329,14 +342,13 @@ def generateFiles(symbolDailyData, fileStorePath):
     expiryWeeklyData = np.array(symbolDailyData.apply(lambda row: getExpiryWeeklyData(row), axis=1).tolist()).transpose()
 
     symbolDailyData['ExpiryWeekNumberMonthly'] = symbolDailyData['ExpiryWeekNumberYearly'] = np.nan
-    symbolDailyData['ExpiryWeekNumberMonthly'], symbolDailyData['ExpiryWeekNumberYearly'], \
-        symbolDailyData['EvenExpiryWeekNumberMonthly'], symbolDailyData['EvenExpiryWeekNumberYearly'], \
-        symbolDailyData['ExpiryWeeklyReturnPoints'], symbolDailyData['ExpiryWeeklyReturnPercentage'], \
-        symbolDailyData['PositiveExpiryWeek'] = \
-        expiryWeeklyData[2], expiryWeeklyData[3], \
-        ([((i % 2) == 0) for i in expiryWeeklyData[2]]), ([((i % 2) == 0) for i in expiryWeeklyData[3]]), \
-        expiryWeeklyData[0], expiryWeeklyData[1], \
-        ([(i > 0) for i in expiryWeeklyData[0]])
+    symbolDailyData['ExpiryWeekNumberMonthly'] = expiryWeeklyData[2]
+    symbolDailyData['ExpiryWeekNumberYearly'] = expiryWeeklyData[3]
+    symbolDailyData['EvenExpiryWeekNumberMonthly'] = pd.Series(expiryWeeklyData[2]).apply(safe_even_check)
+    symbolDailyData['EvenExpiryWeekNumberYearly'] = pd.Series(expiryWeeklyData[3]).apply(safe_even_check)
+    symbolDailyData['ExpiryWeeklyReturnPoints'] = expiryWeeklyData[0]
+    symbolDailyData['ExpiryWeeklyReturnPercentage'] = expiryWeeklyData[1]
+    symbolDailyData['PositiveExpiryWeek'] = pd.Series(expiryWeeklyData[0]).apply(safe_boolean)
 
     # replace not a number values in data frame
     symbolDailyData[['MondayWeekNumberMonthly', 'MondayWeekNumberYearly']] = symbolDailyData[
@@ -348,15 +360,15 @@ def generateFiles(symbolDailyData, fileStorePath):
 
     # monthly data calculation
     monthlyReturns = np.array(symbolDailyData.apply(lambda row: getMonthlyReturns(row), axis=1).tolist()).transpose()
-    symbolDailyData['EvenMonth'] = ((symbolDailyData['Date'].dt.month % 2) == 0)
+    symbolDailyData['EvenMonth'] = symbolDailyData['Date'].dt.month.apply(safe_even_check)
     symbolDailyData['MonthlyReturnPoints'], symbolDailyData['MonthlyReturnPercentage'] = monthlyReturns[0], monthlyReturns[1]
-    symbolDailyData['PositiveMonth'] = (symbolDailyData['MonthlyReturnPoints'] > 0)
+    symbolDailyData['PositiveMonth'] = symbolDailyData['MonthlyReturnPoints'].apply(safe_boolean)
 
     # yearly data calculation
     yearlyReturns = np.array(symbolDailyData.apply(lambda row: getYearlyReturns(row), axis=1).tolist()).transpose()
-    symbolDailyData['EvenYear'] = ((symbolDailyData['Date'].dt.year % 2) == 0)
+    symbolDailyData['EvenYear'] = symbolDailyData['Date'].dt.year.apply(safe_even_check)
     symbolDailyData['YearlyReturnPoints'], symbolDailyData['YearlyReturnPercentage'] = yearlyReturns[0], yearlyReturns[1]
-    symbolDailyData['PositiveYear'] = (symbolDailyData['YearlyReturnPoints'] > 0)
+    symbolDailyData['PositiveYear'] = symbolDailyData['YearlyReturnPoints'].apply(safe_boolean)
     print('Done')
 
     # save all files to csv
