@@ -1,3 +1,5 @@
+https://blink.new/sign-up?ref=QfR6L8r1
+
 #!/usr/bin/env node
 
 /**
