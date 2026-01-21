@@ -1,3 +1,13 @@
+we have 12000 LOC of python code for generating treadsheets and summeries for statergy that our developer building but it's not fesible to everyone can run files with function calling and setting parameters 
+we need devs to run that code 
+so our research team confused and create different files with errorswhat we need is a solution a ui that run function and in ui you can edit parametersbut main thing we are having 1000 of csv for calculating and generating final filesso i am pasting that code here look what we can do also we can make it faster and migrate all data in DB then simple streamlit ui and that's all maybei need your opinion cause you are senior product and dev hereif there is a way i need full detailed prompt that i can give my agent sonnet 4.5 that help me with reference of all the csv and this py file so it'll be easyread whole files take your time 
+any question you have just ask me
+
+
+
+
+
+
 https://blink.new/sign-up?ref=QfR6L8r1
 
 #!/usr/bin/env node
