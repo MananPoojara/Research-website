@@ -1,5 +1,7 @@
 # Research-website
 
+https://drive.google.com/file/d/1GyWK9dJy4RhxddwqQ7aumO5i65zR6jld/view?usp=drive_link
+
 https://drive.google.com/file/d/1EBNaUQksQT58ejv70pFhdr51-kSc6vt-/view?usp=sharing
 
 sudo apt update && sudo apt upgrade -y && sudo apt install -y ca-certificates curl gnupg git ufw docker.io docker-compose && sudo ufw allow OpenSSH && sudo ufw allow 80 && sudo ufw allow 443 && sudo ufw --force enable && sudo systemctl enable --now docker && sudo usermod -aG docker $USER && mkdir -p ~/youngturtle-server/infra/nginx ~/youngturtle-server/infra/compose ~/youngturtle-server/infra/volumes/{postgres,redis,minio} && touch ~/youngturtle-server/infra/docker-compose.yml ~/youngturtle-server/infra/nginx/default.conf
