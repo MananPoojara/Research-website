@@ -1,3 +1,13 @@
+
+libgen.li
+sci-hub.ren
+archive.org
+annas-archive.gl
+
+
+
+
+
 # Research-website
 
 Arbitrage claude chat: https://claude.ai/share/6f22ee40-1452-4148-911a-341a1aae4401
