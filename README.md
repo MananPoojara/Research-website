@@ -2,7 +2,7 @@ https://youtu.be/V2U4z-9wQ4k?si=JTw2FGUOegjgBdM_
 
 I need full transcribe of this vudeo
 
-
+https://x.com/mika_systems/status/2110037357164441796
 
 
 
