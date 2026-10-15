@@ -1,3 +1,11 @@
+https://youtu.be/V2U4z-9wQ4k?si=JTw2FGUOegjgBdM_
+
+I need full transcribe of this vudeo
+
+
+
+
+
 
 Attaching ChatGPT conversation.md file. Here it is [MD file conversation] You have to continue the ChatGPT pending work first of all, that pending, the book converts, and after that I need some of the books that are not in share drive, and if it is in share drive, then take from that research drive. If there is no books available for the below authors, then use AgentReach skill and go to the browser or other MCp servers for LibGen or SciFi or another site. Connect them and download the books and convert it into strategy, author by author, for below authors, after you've done the pending work. And I need it to be objective, rule-based books that can be converted to strategy and show the best tested data and all. Don't make mistake like Joe Rose, and also from the research share, every other author after the authors that I need first, you can continue the work for the other authors. You have to run long horizon using sub-agents, some of the plugins and skills. If you need the permission, ask for it first, so you can start doing the work. And add it your bash commands and other commands in your config. Ask me for the permission right now, so you can start doing the work and go ahead.
 
