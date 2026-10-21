@@ -1,4 +1,11 @@
-https://youtu.be/V2U4z-9wQ4k?si=JTw2FGUOegjgBdM_
+
+
+https://x.com/markminervini/status/2112178425725136936
+
+
+
+
+Lhttps://youtu.be/V2U4z-9wQ4k?si=JTw2FGUOegjgBdM_
 
 https://x.com/qwinsi0x/status/2108650856996307143
 
