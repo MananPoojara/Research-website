@@ -1,5 +1,13 @@
 
-
+Q4 and post-midterm seasonality remain overwhelmingly bullish.
+Historically, the fourth quarter has been the strongest quarter of the year for the S&P 500 in terms of consistency of positive returns. Over roughly the past 80 years, Q4 has produced a positive return about 80% of the time, compared with approximately 60%–64% for the other three quarters.
+The midterm election cycle adds another powerful seasonal tailwind. Stocks have historically performed particularly well as the uncertainty surrounding midterm elections is removed. Depending on the precise starting period used, recent historical studies put the S&P 500's positive rate during Q4 of midterm years at roughly 83%–85%. 
+Given the backdrop of strong earnings growth and, at least for now, no clear evidence of recession, history argues that the bulls should continue to receive the benefit of the doubt.
+However, seasonality is a tendency—not a guarantee. Fed tightening, deteriorating breadth, rising interest rates and elevated oil prices represent meaningful counterweights. At a minimum, those conditions increase the probability of volatility and make the current environment considerably less straightforward than the historical averages suggest. 
+Individual stocks have already been correcting beneath the surface of the major indexes. More than 35% of S&P 500 stocks are currently down 20% or more from their 52-week highs, even as the index itself remains relatively close to record territory. In other words, a significant correction has already occurred—it has simply been masked by the strength of a relatively small number of heavily weighted stocks.
+Interestingly, the 87 Crash  is one of the historical analogs worth keeping in mind following a Fed tightening. The comparison should not be interpreted as a prediction of another crash, but the monetary-policy parallel is real: the Fed raised the discount rate from 5.5% to 6.0% on September 4, 1987, while market interest rates were already rising sharply. 
+The seasonal winds are clearly at the market's back. The question is whether tightening financial conditions, weak participation and rising oil become strong enough headwinds to overpower them.
+The 10-year Treasury yield spiked 125 basis points in just seven months. We looked at prior cases when the 10-year Treasury yield jumped more than 125 basis points in seven months and found 13 prior cases. Only seven of the 13 cases (54%) had positive returns three months later. minervini.com
 https://x.com/markminervini/status/2112178425725136936
 
 
