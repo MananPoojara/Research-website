@@ -1,3 +1,5 @@
+https://www.notion.so/Ai-Resource-2db508e6e3af80ac985bc6215bd9350b
+
 
 Q4 and post-midterm seasonality remain overwhelmingly bullish.
 Historically, the fourth quarter has been the strongest quarter of the year for the S&P 500 in terms of consistency of positive returns. Over roughly the past 80 years, Q4 has produced a positive return about 80% of the time, compared with approximately 60%–64% for the other three quarters.
