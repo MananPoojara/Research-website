@@ -1,0 +1,695 @@
+# MASTER BUILD PROMPT: PROFESSIONAL MULTI-MARKET TRADING JOURNAL & COMMAND CENTER
+
+## ROLE & OBJECTIVE
+
+Act as a senior Notion architect, trading performance analyst, database engineer, and dashboard designer.
+
+Your task is to build a complete, professional-grade **Multi-Market Intraday Trading Journal & Performance Analytics Command Center** in Notion.
+
+I use TradingView for chart analysis and want to maintain both historical trade records and simulated (paper trading) records.
+
+The workspace must help me:
+- Maintain a structured record of every trade.
+- Analyze performance across multiple markets.
+- Evaluate intraday trading strategies.
+- Review TradingView chart setups.
+- Track risk and reward.
+- Analyze trading psychology and discipline.
+- Identify repeated mistakes.
+- Compare strategies and market sessions.
+- Review performance daily, weekly, and monthly.
+- Improve my trading process through measurable data.
+
+This is a trading journal and educational analytics workspace. It must not execute trades, recommend financial positions, or encourage real-money trading.
+
+**Build an actual functional Notion workspace, not a static dashboard mockup.**
+
+---
+
+# PART 1: MASTER DASHBOARD
+
+Create a premium homepage named:
+
+# TRADING COMMAND CENTER
+
+Design it like a professional trading analytics terminal.
+
+### Dashboard layout
+
+Organize the homepage into these sections:
+
+1. Main Performance Overview
+2. Market Performance
+3. Daily Trading Overview
+4. Trade Analytics
+5. Strategy Performance
+6. Risk Management
+7. Trading Psychology
+8. Mistake Analysis
+9. TradingView Chart Library
+10. Weekly & Monthly Reports
+11. Goals & Improvement Tracker
+12. Quick Actions
+
+Keep the most important metrics at the top.
+
+### Global dashboard filters
+
+Where supported, provide filters for:
+
+- Date Range
+- Market
+- Asset Class
+- Trading Strategy
+- Trading Session
+- Trade Direction
+- Record Type (Historical / Simulated)
+- Trade Status
+
+Ensure that analytics distinguish historical and simulated records. Never silently combine their statistics.
+
+# PART 2: MASTER TRADE DATABASE
+
+Create a central database called:
+
+**MASTER TRADE JOURNAL**
+
+Each row represents one individual trade.
+
+### A. Trade identification
+
+- Trade ID
+- Trade Date
+- Entry Time
+- Exit Time
+- Time Zone
+- Market
+- Asset Class
+- Instrument / Symbol
+- Trading Session
+- Trade Direction (Long / Short)
+- Record Type (Historical / Simulated)
+- Trade Status (Planned / Open Record / Closed / Incomplete)
+- Strategy
+- Setup Type
+
+Support multiple asset classes:
+- Forex
+- Stocks
+- Indices
+- Crypto
+- Futures
+- Options
+
+### B. Trade entry information
+
+- Planned Entry
+- Actual Entry Price
+- Stop Loss
+- Take Profit
+- Position Size
+- Contract Multiplier (where applicable)
+- Planned Risk
+- Planned Reward
+- Initial Risk-to-Reward Ratio
+- Entry Reason
+- Market Structure
+- Trend Direction
+- Higher Timeframe Bias
+- Lower Timeframe Confirmation
+- Entry Confirmation
+- Market Conditions
+
+### C. Trade exit information
+
+- Actual Exit Price
+- Exit Time
+- Exit Reason
+- Gross Profit / Loss
+- Commission
+- Other Trading Costs
+- Net Profit / Loss
+- Reporting Currency
+- Currency Conversion Rate (if applicable)
+- Converted Net P&L
+- Actual Risk-to-Reward
+- Final Trade Result (Win / Loss / Breakeven)
+
+Do not assume one universal position-sizing formula works for every asset class. Allow market-specific calculations and manual P&L imports when necessary.
+
+### D. TradingView documentation
+
+Include:
+
+- TradingView Chart Link
+- Before-Trade Screenshot
+- After-Trade Screenshot
+- Entry Markup
+- Exit Markup
+- Timeframe
+- Technical Analysis
+- Key Support / Resistance
+- Market Structure Notes
+- Trade Thesis
+- Post-Trade Observations
+
+Allow each trade page to contain a detailed analysis and image gallery.
+
+### E. Trading psychology
+
+- Pre-Trade Emotion
+- During-Trade Emotion
+- Post-Trade Emotion
+- Confidence Score (1–10)
+- Discipline Score (1–10)
+- Patience Score (1–10)
+- Focus Score (1–10)
+- Followed Trading Plan? (Yes / No)
+- Rule Violations
+- Emotional Triggers
+- Lessons Learned
+
+### F. Post-trade evaluation
+
+- Setup Quality (1–10)
+- Execution Quality (1–10)
+- Risk Management Quality (1–10)
+- Trade Grade (A / B / C / D)
+- What Went Well?
+- What Went Wrong?
+- What Could Be Improved?
+- Main Lesson
+- Next Improvement Action
+
+---
+
+# PART 3: MULTI-MARKET ANALYTICS ENGINE
+
+Build analytics that work across all supported asset classes.
+
+Create separate views for:
+
+- Forex Performance
+- Stock Performance
+- Index Performance
+- Crypto Performance
+- Futures Performance
+- Options Performance
+- Overall Historical Performance
+- Overall Simulated Performance
+
+### Important metrics
+
+Calculate dynamically where supported:
+
+1. Total Closed Trades
+2. Winning Trades
+3. Losing Trades
+4. Breakeven Trades
+5. Win Rate
+6. Loss Rate
+7. Gross Profit
+8. Gross Loss
+9. Net P&L
+10. Average Winning Trade
+11. Average Losing Trade
+12. Profit Factor
+13. Average Planned R:R
+14. Average Realized R
+15. Largest Win
+16. Largest Loss
+17. Average Holding Duration
+18. Maximum Drawdown
+19. Consecutive Wins
+20. Consecutive Losses
+
+### Formula requirements
+
+Use safe formulas that handle:
+- Empty properties.
+- Incomplete records.
+- Zero denominators.
+- Open trades.
+- Missing exit prices.
+- Different reporting currencies.
+
+Never treat missing data as zero without explicitly defining that behavior.
+
+Use consistent definitions for all calculated metrics.
+
+For profit factor, use gross winning P&L divided by the absolute value of gross losing P&L.
+
+For drawdown, use chronological cumulative P&L and a running peak, not simply the largest individual loss.
+
+If Notion cannot calculate a metric accurately through native formulas, document the limitation and provide a reliable alternative.
+
+---
+
+# PART 4: STRATEGY PERFORMANCE DATABASE
+
+Create a separate database called:
+
+**STRATEGY LIBRARY**
+
+Properties:
+
+- Strategy Name
+- Strategy ID
+- Market Compatibility
+- Asset Class
+- Strategy Description
+- Entry Conditions
+- Exit Conditions
+- Stop Loss Rules
+- Take Profit Rules
+- Market Structure
+- Required Confirmation
+- Preferred Timeframe
+- Trading Session
+- Related Trades
+- Total Closed Trades
+- Win Rate
+- Average R
+- Profit Factor
+- Net P&L
+- Setup Quality
+- Strategy Status
+- Strategy Notes
+
+### Strategy analytics
+
+Compare strategies based on:
+
+- Win Rate
+- Net P&L
+- Average R
+- Profit Factor
+- Total Trade Sample
+- Average Execution Quality
+- Rule Adherence
+
+Do not label a strategy successful based on win rate alone.
+
+Show sample size alongside every strategy performance metric.
+
+---
+
+# PART 5: TRADING SESSION ANALYSIS
+
+Create a dedicated session analytics section.
+
+Track performance by:
+
+- Asian Session
+- London Session
+- New York Session
+- London–New York Overlap
+- Custom Session
+
+Metrics:
+
+- Total Trades
+- Win Rate
+- Net P&L
+- Average R
+- Average Holding Duration
+- Most Frequent Mistake
+- Strategy Performance
+
+Use the recorded local timezone and session classification consistently.
+
+Create charts comparing session performance.
+
+---
+
+# PART 6: RISK MANAGEMENT DASHBOARD
+
+Create a separate section called:
+
+**RISK & PERFORMANCE CONTROL CENTER**
+
+Track:
+
+- Planned Risk
+- Actual Risk
+- Planned Reward
+- Realized Reward
+- Risk-to-Reward Ratio
+- Average Loss
+- Largest Loss
+- Average Win
+- Maximum Drawdown
+- Risk Rule Violations
+- Position Sizing Notes
+- Risk Consistency Score
+
+Include a risk review for every completed record.
+
+Keep planned risk separate from realized outcomes.
+
+Never interpret a profitable result as proof that the risk taken was appropriate.
+
+---
+
+# PART 7: TRADING PSYCHOLOGY JOURNAL
+
+Create a database named:
+
+**TRADING MINDSET TRACKER**
+
+Track daily:
+
+- Date
+- Mood
+- Focus
+- Confidence
+- Patience
+- Discipline
+- Stress Level
+- Emotional State
+- Mental Preparation
+- Trading Motivation
+- Daily Reflection
+- Lessons Learned
+- Tomorrow's Improvement Goal
+
+Create analytics comparing psychological scores with execution quality and trade outcomes.
+
+Treat correlations as observations, not proof of causation.
+
+---
+
+# PART 8: TRADING MISTAKE DATABASE
+
+Create:
+
+**MISTAKE ANALYSIS CENTER**
+
+Mistake categories:
+
+- FOMO
+- Overtrading
+- Revenge Trading
+- Poor Entry
+- Early Exit
+- Late Exit
+- Ignoring Trading Plan
+- Poor Risk Management
+- Impulsive Decision
+- Lack of Confirmation
+- Other
+
+Properties:
+
+- Mistake Name
+- Date
+- Related Trade
+- Market
+- Strategy
+- Mistake Category
+- Root Cause
+- Emotional Trigger
+- Financial Impact
+- Repeated Mistake?
+- Prevention Rule
+- Improvement Status
+
+Create reports showing:
+
+- Most Frequent Mistakes
+- Mistakes by Market
+- Mistakes by Strategy
+- Mistakes by Trading Session
+- Mistake-Related P&L
+- Repeated Rule Violations
+
+---
+
+# PART 9: TRADINGVIEW CHART LIBRARY
+
+Create a dedicated database called:
+
+**TRADINGVIEW SETUP LIBRARY**
+
+Store:
+
+- Setup Name
+- Instrument
+- Market
+- Date
+- Timeframe
+- TradingView URL
+- Before-Trade Screenshot
+- After-Trade Screenshot
+- Market Structure
+- Entry Zone
+- Stop Loss Zone
+- Target Zone
+- Setup Description
+- Related Trade
+- Strategy
+- Setup Grade
+- Review Notes
+
+Create gallery views for visual analysis.
+
+Make it easy to compare the original chart thesis against the final recorded outcome.
+
+Do not claim automatic TradingView synchronization unless an actual supported integration is configured. Support manual links, image uploads, and CSV imports.
+
+---
+
+# PART 10: DAILY, WEEKLY & MONTHLY REVIEWS
+
+Create three structured review templates.
+
+### Daily Review
+
+- Date
+- Markets Observed
+- Total Closed Trades
+- Net P&L
+- Best Trade
+- Worst Trade
+- Execution Quality
+- Discipline Score
+- Mistakes
+- Main Lesson
+- Tomorrow's Goal
+
+### Weekly Review
+
+- Week
+- Total Trades
+- Net P&L
+- Win Rate
+- Average R
+- Best Strategy
+- Worst Strategy
+- Best Market
+- Session Analysis
+- Common Mistakes
+- Psychology Analysis
+- Key Improvements
+
+### Monthly Review
+
+- Month
+- Total Trades
+- Historical vs Simulated Breakdown
+- Net P&L
+- Win Rate
+- Profit Factor
+- Average R
+- Maximum Drawdown
+- Strategy Comparison
+- Market Comparison
+- Session Comparison
+- Psychology Trends
+- Major Lessons
+- Next Month's Objectives
+
+Connect reviews to the relevant trade records through relations and rollups.
+
+---
+
+# PART 11: PROFESSIONAL VISUAL DASHBOARD
+
+Create these charts using Notion chart views wherever available:
+
+1. Monthly P&L Trend
+2. Cumulative Equity Curve
+3. Win vs Loss Distribution
+4. Market Performance Comparison
+5. Strategy Performance Comparison
+6. Trading Session Performance
+7. Monthly Trade Volume
+8. Average R Trend
+9. Mistake Frequency
+10. Discipline Score Trend
+
+Use separate charts for historical and simulated records.
+
+If a native Notion chart cannot display the requested information accurately, provide a suitable external spreadsheet or charting alternative without pretending it is a native Notion feature.
+
+---
+
+# PART 12: QUICK ACTIONS & DATABASE TEMPLATES
+
+Create convenient templates for:
+
+- New Historical Trade
+- New Simulated Trade
+- New Trade Review
+- New Psychology Entry
+- New Mistake Record
+- New Strategy
+- New Daily Review
+- New Weekly Review
+- New Monthly Review
+
+Prepopulate sensible default values where supported.
+
+Ensure every new trade can be documented without navigating through multiple unrelated pages.
+
+---
+
+# PART 13: DATA IMPORT & EXPORT
+
+Prepare the workspace for:
+
+- Historical trade CSV imports.
+- Simulated trade CSV imports.
+- TradingView chart links.
+- Screenshot uploads.
+- Manual performance updates.
+- Exporting trade records for independent analysis.
+
+Keep historical and simulated records identifiable after importing.
+
+Avoid duplicate trade records.
+
+Document the required CSV column structure.
+
+---
+
+# PART 14: PROFESSIONAL UI & DESIGN
+
+Design the entire workspace with a premium, modern trading terminal aesthetic.
+
+Visual direction:
+
+- Minimalist.
+- Professional.
+- Organized.
+- Dark-themed inspiration.
+- Clear typography.
+- Consistent icons.
+- Logical navigation.
+- Compact KPI sections.
+- Attractive charts.
+- Clean database views.
+
+Use a dashboard-first layout.
+
+Do not overload the homepage with every database property.
+
+Keep detailed information inside individual database records.
+
+Make the system usable on desktop and mobile.
+
+---
+
+# PART 15: BUILD ORDER & VERIFICATION
+
+Build the workspace in this order:
+
+1. Main Command Center page.
+2. Master Trade Journal.
+3. Strategy Library.
+4. Trading Mistake Database.
+5. Psychology Tracker.
+6. TradingView Setup Library.
+7. Daily, Weekly and Monthly Review Databases.
+8. Relations and Rollups.
+9. Formulas and Calculated Metrics.
+10. Dashboard Views.
+11. Visual Analytics.
+12. Quick Actions and Templates.
+
+After building, verify:
+
+- All database relations.
+- Formula accuracy.
+- Rollup calculations.
+- Historical vs simulated filters.
+- Market-specific filters.
+- Closed-trade calculations.
+- Currency consistency.
+- Dashboard views.
+- Chart accuracy.
+- CSV import structure.
+
+Use clearly labelled fictional test records to test formulas, and remove them from actual performance views after testing.
+
+Do not fabricate performance data.
+
+If any requested feature cannot be implemented natively in Notion, explain the limitation and provide an alternative.
+
+---
+
+# FINAL DELIVERABLE
+
+I expect a complete Notion Trading Command Center containing:
+
+- One master dashboard.
+- One interconnected trade journal.
+- A multi-market analytics system.
+- A strategy performance library.
+- A risk management dashboard.
+- A trading psychology journal.
+- A mistake analysis system.
+- A TradingView chart library.
+- Daily, weekly and monthly reviews.
+- Professional visual analytics.
+- Reusable database templates.
+
+The final result must be practical, scalable, accurate, and easy to maintain.
+
+**Priority order: Data accuracy → Functional databases → Reliable analytics → Useful dashboard → Visual aesthetics.**
+
+Build and verify the actual workspace. Do not simply provide instructions for building it.
+
+
+These are the features I'd add beyond the basic trading journal.
+
+1. Equity Curve Tracker
+Track cumulative P&L over time. Helps visualize performance trends rather than looking at individual trades.
+High priority
+
+2. Risk Analysis Dashboard
+Track planned versus actual risk, average loss, drawdown, and risk-to-reward consistency.
+High priority
+
+3. Before & After Trade Gallery
+Store chart screenshots alongside each trade. Review your original analysis against the eventual outcome.
+
+4. Psychology & Discipline Score
+Compare your discipline, confidence, emotional state, and adherence to your trading plan.
+
+5. Trading Calendar Heatmap
+Display daily trade activity and recorded performance in a calendar-style overview.
+
+6. Strategy Comparison Engine
+Compare strategies by win rate, average R:R, net P&L, and sample size. Avoid judging strategies from too few records.
+
+
+Feature	Why it matters
+Screenshot library	Visual trade review
+Setup grading	Evaluate consistency
+Rule violation counter	Identify discipline issues
+Consecutive win/loss tracking	Understand performance sequences
+Holding time analysis	Compare trade duration
+Session analysis	Compare recorded market sessions
+Monthly report	Track long-term development
+Data export	Keep an independent backup
