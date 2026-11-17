@@ -1,3 +1,7 @@
+https://app.notion.com/p/AI-Research-Universe-416f13cb9b038060a87ec6ebdebad13c?source=copy_link
+
+
+
 https://www.notion.so/Ai-Resource-2db508e6e3af80ac985bc6215bd9350b
 
 
